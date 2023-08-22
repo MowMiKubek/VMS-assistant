@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { VehicleModule } from './vehicle/vehicle.module';
+import { RefuelModule } from './refuel/refuel.module';
 import databaseConfig from './database/database.config';
 
 @Module({
@@ -12,7 +14,8 @@ import databaseConfig from './database/database.config';
     ConfigModule.forRoot({
       envFilePath: 'development.env'
     }),
-    TypeOrmModule.forRoot(databaseConfig())
+    TypeOrmModule.forRoot(databaseConfig()),
+    VehicleModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],

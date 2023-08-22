@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Role } from "../role.enum";
+import { Vehicle } from "src/vehicle/entities/vehicle.entity";
 
 @Entity({name: 'users'})
 export class User {
@@ -23,4 +24,7 @@ export class User {
 
     @Column({ default: Role.User })
     rola: Role;
+
+    @OneToMany(() => Vehicle, vehicle => vehicle.user)
+    pojazdy: Promise<Vehicle[]>
 }
