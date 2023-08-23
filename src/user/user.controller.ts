@@ -24,7 +24,12 @@ export class UserController {
 
   @Get(':id/vehicles')
   getVehicles(@Param('id') id: string) {
-    return this.userService.vehicles(+id);
+    return this.userService.getVehicles(+id);
+  }
+
+  @Get(':id/tickets')
+  getTickets(@Param('id') id: string) {
+    return this.userService.getTickets(+id);
   }
 
   @Patch(':id')
@@ -36,4 +41,5 @@ export class UserController {
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
+
 }

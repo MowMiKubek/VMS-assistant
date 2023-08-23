@@ -6,6 +6,7 @@ import { QueryFailedError } from 'typeorm';
 export class TypeOrmExceptionFilter implements ExceptionFilter {
     catch(exception: QueryFailedError, host: ArgumentsHost) {
         const response = host.switchToHttp().getResponse<Response>();
+        console.log(exception.message);
 
         switch (exception.driverError.code) {
             case 'ER_NO_REFERENCED_ROW_2': {
@@ -13,16 +14,16 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
                     statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                     message: 'Foreign key constraint violation.',
                 });
+                break;
             }
             case 'ER_DUP_ENTRY': {
-              console.log(exception.message);
-              response.status(422).json({
-                statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-                message: 'Duplicate key constraint violation.',
-            });
+                response.status(422).json({
+                    statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                    message: 'Duplicate key constraint violation.',
+                });
+                break;
             }
             default: {
-                console.log(exception.driverError.code)
                 response.status(500).json({
                     statusCode: 500,
                     message: 'Unknown database error',

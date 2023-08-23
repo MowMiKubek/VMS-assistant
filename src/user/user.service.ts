@@ -37,12 +37,21 @@ export class UserService {
     return this.userRepo.delete({ id_user });
   }
 
-  async vehicles(id_user: number) {
+  async getVehicles(id_user: number) {
     const user = await this.findOne(id_user);
     if(!user) {
       throw new NotFoundException(`User with id ${id_user} does not exits`);
     }
     const vehicles = await user.pojazdy;
     return vehicles;
+  }
+
+  async getTickets(id_user: number) {
+    const user = await this.findOne(id_user);
+    if(!user) {
+      throw new NotFoundException(`User with id ${id_user} does not exits`);
+    }
+    const tickets = await user.mandaty;
+    return tickets;
   }
 }
