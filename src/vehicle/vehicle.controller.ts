@@ -2,10 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { VehicleService } from './vehicle.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { RefuelService } from 'src/refuel/refuel.service';
 
 @Controller('vehicle')
 export class VehicleController {
-  constructor(private readonly vehicleService: VehicleService) {}
+  constructor(
+    private readonly vehicleService: VehicleService,
+    ) {}
 
   @Post()
   create(@Body() createVehicleDto: CreateVehicleDto) {
@@ -22,6 +25,11 @@ export class VehicleController {
     return this.vehicleService.findOne(+id);
   }
 
+  @Get(":id/refuel")
+  getRefuel(@Param('id') id: string) {
+    return this.vehicleService.getRefuel(+id);
+  }
+  
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
     return this.vehicleService.update(+id, updateVehicleDto);

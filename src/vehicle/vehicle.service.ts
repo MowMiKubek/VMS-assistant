@@ -4,6 +4,7 @@ import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vehicle } from './entities/vehicle.entity';
 import { DeleteResult, Repository } from 'typeorm';
+import { Refuel } from 'src/refuel/entities/refuel.entity';
 
 @Injectable()
 export class VehicleService {
@@ -33,5 +34,14 @@ export class VehicleService {
 
   remove(id: number): Promise<DeleteResult> {
     return this.vehicleRepo.delete({ id_pojazdu: id });
+  }
+
+  async getRefuel(id: number): Promise<Refuel[]> {
+    const currentVehicle = await this.findOne(id);
+    if(!currentVehicle) {
+      throw new NotFoundException('vehicle not found');
+    }
+    const refuelList = await currentVehicle.tankowania;
+    return refuelList;
   }
 }

@@ -7,6 +7,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { RefuelModule } from './refuel/refuel.module';
 import databaseConfig from './database/database.config';
+import { APP_FILTER } from '@nestjs/core';
+import { TypeOrmExceptionFilter } from './vehicle/filters/typeorm-exception.filter';
+
+// TODO
+// check whether its necessary to pass multiple entities to TypeOrm.forFreature in modules
+
 
 @Module({
   imports: [
@@ -16,8 +22,14 @@ import databaseConfig from './database/database.config';
     }),
     TypeOrmModule.forRoot(databaseConfig()),
     VehicleModule,
+    RefuelModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ConfigService],
+  providers: [AppService, ConfigService, 
+      {
+        provide: APP_FILTER,
+        useClass: TypeOrmExceptionFilter
+      }
+  ],
 })
 export class AppModule {}

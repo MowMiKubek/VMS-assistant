@@ -1,6 +1,7 @@
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { FuelType } from "../fueltype.enum";
+import { Refuel } from "src/refuel/entities/refuel.entity";
 
 
 @Entity({ name: 'pojazdy' })
@@ -38,4 +39,7 @@ export class Vehicle {
     @ManyToOne(() => User, user => user.pojazdy, { nullable: true })
     @JoinColumn({ name: "id_user" })
     user: User;
+
+    @OneToMany(() => Refuel, refuel => refuel.pojazd)
+    tankowania: Promise<Refuel[]>;
 }
