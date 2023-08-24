@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Role } from "../role.enum";
 import { Vehicle } from "src/vehicle/entities/vehicle.entity";
 import { Ticket } from "src/tickets/entities/ticket.entity";
+import { Exclude } from "class-transformer";
 
 @Entity({name: 'users'})
 export class User {
@@ -20,6 +21,7 @@ export class User {
     @Column({ length: 45 })
     login: string;
 
+    @Exclude()
     @Column('text')
     haslo: string;
 
