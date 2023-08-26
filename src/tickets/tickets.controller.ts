@@ -1,34 +1,89 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+} from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import {
+    ApiBadRequestResponse,
+    ApiCreatedResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiParam,
+    ApiTags,
+} from '@nestjs/swagger';
+import { Ticket } from './entities/ticket.entity';
+import { DeleteResult } from 'typeorm';
 
+@ApiTags('tickets')
 @Controller('tickets')
 export class TicketsController {
-  constructor(private readonly ticketsService: TicketsService) {}
+    constructor(private readonly ticketsService: TicketsService) {}
 
-  @Post(':userid')
-  create(@Param('userid') userId: string,  @Body() createTicketDto: CreateTicketDto) {
-    return this.ticketsService.create(+userId, createTicketDto);
-  }
+    @ApiCreatedResponse({
+        description: 'Ticket was created, ticket object as response',
+        type: Ticket,
+    })
+    @ApiNotFoundResponse({
+        description: 'Ticket with given id does not exist',
+    })
+    @ApiBadRequestResponse({
+        description:
+            'Incorrect fields in request body, error object as response',
+    })
+    @ApiParam({
+        name: 'userid',
+        example: 1,
+        description: 'id of user that will have ticket created',
+    })
+    @Post(':userid')
+    create(
+        @Param('userid') userId: string,
+        @Body() createTicketDto: CreateTicketDto,
+    ) {
+        return this.ticketsService.create(+userId, createTicketDto);
+    }
 
-  @Get()
-  findAll() {
-    return this.ticketsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ticketsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
-    return this.ticketsService.update(+id, updateTicketDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ticketsService.remove(+id);
-  }
+    @ApiOkResponse({
+        description: 'List of tickets as response',
+        type: [Ticket],
+    })
+    @Get()
+    findAll() {
+        return this.ticketsService.findAll();
+    }
+    @ApiOkResponse({
+        description: 'Ticket object as response',
+        type: Ticket,
+    })
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.ticketsService.findOne(+id);
+    }
+    @ApiOkResponse({
+        description:
+            'Ticket record successfully updated, Ticket object as response',
+        type: Ticket,
+    })
+    @ApiNotFoundResponse({
+        description: 'Ticket record with given id does not exist',
+    })
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
+        return this.ticketsService.update(+id, updateTicketDto);
+    }
+    @ApiOkResponse({
+        description: 'DeleteResult object as response',
+        type: DeleteResult,
+    })
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.ticketsService.remove(+id);
+    }
 }

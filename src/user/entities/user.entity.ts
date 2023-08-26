@@ -3,28 +3,35 @@ import { Role } from "../role.enum";
 import { Vehicle } from "src/vehicle/entities/vehicle.entity";
 import { Ticket } from "src/tickets/entities/ticket.entity";
 import { Exclude } from "class-transformer";
+import { ApiProperty } from "@nestjs/swagger";
 
 @Entity({name: 'users'})
 export class User {
+    @ApiProperty({ example: 1 })
     @PrimaryGeneratedColumn()
     id_user: number;
 
+    @ApiProperty({ example: 'Jan' })
     @Column({ length: 50 })
     imie: string;
 
+    @ApiProperty({ example: 'Nowak'})
     @Column({ length: 50 })
     nazwisko: string;
 
-    @Column({ length: 45 })
+    @ApiProperty({ example: 'jnowak@gmail.com' })
+    @Column({ length: 45, unique: true })
     email: string;
 
-    @Column({ length: 45 })
+    @ApiProperty({ example: 'jnowak'})
+    @Column({ length: 45, unique: true })
     login: string;
 
     @Exclude()
     @Column('text')
     haslo: string;
 
+    @ApiProperty({ example: Role.User, default: Role.User })
     @Column({ default: Role.User })
     rola: Role;
 
