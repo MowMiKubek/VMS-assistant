@@ -17,6 +17,21 @@ Swagger documentation is avalible in route /docs, after application is launched
 $ npm install
 ```
 
+Aside from installing npm modules, the `development.env` file must be added in the root directory. It should look like example below.
+
+```bash
+PORT=3000
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=password
+DB_NAME=db_name
+
+# JWT secret
+JWT_SECRET=secret
+```
+
 ## Running the app
 
 ```bash
