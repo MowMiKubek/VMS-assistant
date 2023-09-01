@@ -4,7 +4,7 @@ import { UpdateRefuelDto } from './dto/update-refuel.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { Refuel } from './entities/refuel.entity';
-import { VehicleService } from 'src/vehicle/vehicle.service';
+import { VehicleService } from '../vehicle/vehicle.service';
 
 @Injectable()
 export class RefuelService {

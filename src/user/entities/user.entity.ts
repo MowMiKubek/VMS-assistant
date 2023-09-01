@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Role } from "../role.enum";
-import { Vehicle } from "src/vehicle/entities/vehicle.entity";
-import { Ticket } from "src/tickets/entities/ticket.entity";
+import { Vehicle } from "../..//vehicle/entities/vehicle.entity";
+import { Ticket } from "../..//tickets/entities/ticket.entity";
 import { Exclude } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 

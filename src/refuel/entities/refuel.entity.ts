@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Vehicle } from "src/vehicle/entities/vehicle.entity";
-import { FuelType } from "src/vehicle/fueltype.enum";
+import { Vehicle } from "../../vehicle/entities/vehicle.entity";
+import { FuelType } from "../../vehicle/fueltype.enum";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: "tankowania" })

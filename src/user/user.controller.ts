@@ -11,7 +11,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 import {
     ApiBadRequestResponse,
     ApiCreatedResponse,
@@ -22,8 +22,8 @@ import {
     ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
-import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
-import { Ticket } from 'src/tickets/entities/ticket.entity';
+import { Vehicle } from '../vehicle/entities/vehicle.entity';
+import { Ticket } from '../tickets/entities/ticket.entity';
 
 @ApiTags('user')
 @UseInterceptors(SerializeInterceptor)

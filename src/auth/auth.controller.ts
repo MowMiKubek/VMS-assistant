@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthGuard } from './guards/auth.guard';
 import {
     ApiBadRequestResponse,
@@ -20,7 +20,7 @@ import {
     ApiUnauthorizedResponse,
     ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 
 class LoginResponse {
     @ApiProperty({

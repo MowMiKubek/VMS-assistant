@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, IsEnum, IsPositive, IsInt, Min, Max, IsOptional } from "class-validator";
-import { FuelType } from "src/vehicle/fueltype.enum";
+import { FuelType } from "../../vehicle/fueltype.enum";
 
 export class CreateRefuelDto {
     @ApiProperty({ example: 50.02 })

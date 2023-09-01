@@ -20,7 +20,7 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { Vehicle } from './entities/vehicle.entity';
-import { Refuel } from 'src/refuel/entities/refuel.entity';
+import { Refuel } from '../refuel/entities/refuel.entity';
 
 @ApiTags('vehicle')
 @Controller('vehicle')

@@ -1,7 +1,7 @@
-import { User } from "src/user/entities/user.entity";
+import { User } from "../..//user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { FuelType } from "../fueltype.enum";
-import { Refuel } from "src/refuel/entities/refuel.entity";
+import { Refuel } from "../..//refuel/entities/refuel.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
 
