@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { AuthModule } from './auth/auth.module';
-import databaseConfig from './database/database.config';
+import databaseConfig from '../database/database.config';
 
 @Module({
     imports: [

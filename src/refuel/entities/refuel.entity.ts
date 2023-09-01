@@ -13,7 +13,7 @@ export class Refuel {
     ilosc_paliwa: number;
 
     @ApiProperty({ example: FuelType.Benzyna })
-    @Column({ enum: FuelType })
+    @Column({ type: "enum", enum: FuelType, default: FuelType.Inne })
     typ_paliwa: FuelType;
 
     @ApiProperty({ example: 649 })

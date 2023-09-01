@@ -36,7 +36,7 @@ export class Vehicle {
     data_pierw_rej: Date;
 
     @ApiProperty({ example: FuelType.Diesel })
-    @Column({ enum: FuelType })
+    @Column({ type: "enum", enum: FuelType, default: FuelType.Inne })
     typ_paliwa: FuelType;
 
     @ApiProperty({ example: '###in development###' })
