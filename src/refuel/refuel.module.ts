@@ -4,13 +4,10 @@ import { RefuelController } from './refuel.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Vehicle } from '../vehicle/entities/vehicle.entity';
 import { Refuel } from './entities/refuel.entity';
-import { VehicleService } from '../vehicle/vehicle.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Vehicle, Refuel])],
   controllers: [RefuelController],
-  providers: [RefuelService, VehicleService], 
-  // note: vehicleService is for second layer validation, whether refuel record is being registered to existing vehicle
-  // there is typeORM exception filter handling those errors so this feature may be removed in te future
+  providers: [RefuelService], 
 })
 export class RefuelModule {}

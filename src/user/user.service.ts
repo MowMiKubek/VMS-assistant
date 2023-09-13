@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { DeleteResult, FindManyOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { CreatePermissionDto } from './dto/create-permission.dto';
 
 @Injectable()
 export class UserService {
@@ -68,5 +69,40 @@ export class UserService {
         }
         const tickets = await user.mandaty;
         return tickets;
+    }
+
+    async addPermission(id_user: number, permission: CreatePermissionDto) {
+        // insert many raeords at once
+        const user = await this.findOne(id_user);
+        if (!user) {
+            throw new NotFoundException(
+                `User with id ${id_user} does not exits`,
+            );
+        }
+        const ownCategories = user.permissions.map(perm => perm.kategoria);
+        const newCategories = permission.kategoria;
+        const categoriesToInsert = newCategories.filter(cat => !ownCategories.includes(cat));
+
+        const query = await this.userRepo.createQueryBuilder()
+            .insert()
+            .into('uprawnienia')
+            .values(categoriesToInsert.map(cat => ({ kategoria: cat, id_user })))
+            .execute();
+
+        return this.findOne(id_user);
+    }
+
+    async deletePermission(id_user: number, permission: CreatePermissionDto) {
+        const query = await this.userRepo.createQueryBuilder()
+            .delete()
+            .from('uprawnienia')
+            .where('id_user = :id_user', { id_user })
+            .andWhere('kategoria IN (:...kategoria)', { kategoria: permission.kategoria })
+            .execute();
+        return this.findOne(id_user);
+    }
+
+    async assignVehicle(id_user: number, id_pojazdu: number) {
+
     }
 }

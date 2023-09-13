@@ -39,8 +39,8 @@ export class Vehicle {
     @Column({ type: "enum", enum: FuelType, default: FuelType.Inne })
     typ_paliwa: FuelType;
 
-    @ApiProperty({ example: '###in development###' })
-    @Column({ length: 2 })
+    @ApiProperty({ example: 'B', nullable: true })
+    @Column({ length: 2, nullable: true })
     kategoria: string;
 
     @ApiProperty({ example: 1, required: false })

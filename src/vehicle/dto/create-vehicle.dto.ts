@@ -68,13 +68,4 @@ export class CreateVehicleDto {
     @IsOptional()
     @IsString()
     kategoria: string;
-
-    @ApiProperty({
-        description: 'Id of user (owner)',
-        example: 1,
-        required: false
-    })
-    @IsOptional()
-    @IsNumber()
-    id_user: number;
 }

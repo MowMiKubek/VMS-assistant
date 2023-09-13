@@ -24,6 +24,7 @@ import {
 import { User } from './entities/user.entity';
 import { Vehicle } from '../vehicle/entities/vehicle.entity';
 import { Ticket } from '../tickets/entities/ticket.entity';
+import { CreatePermissionDto } from './dto/create-permission.dto';
 
 @ApiTags('user')
 @UseInterceptors(SerializeInterceptor)
@@ -77,6 +78,17 @@ export class UserController {
     @Get(':id/tickets')
     getTickets(@Param('id') id: string) {
         return this.userService.getTickets(+id);
+    }
+
+    // Permission section
+    @Post(':id/permissions')
+    addPermission(@Param('id') id: string, @Body() permission: CreatePermissionDto) {
+        return this.userService.addPermission(+id, permission);
+    }
+
+    @Delete(':id/permissions')
+    deletePermission(@Param('id') id: string, @Body() permission: CreatePermissionDto) {
+        return this.userService.deletePermission(+id, permission);
     }
 
     @ApiOkResponse({ description: 'User updated successfully, user object as response', type: User})

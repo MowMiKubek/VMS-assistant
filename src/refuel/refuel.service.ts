@@ -4,20 +4,14 @@ import { UpdateRefuelDto } from './dto/update-refuel.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { Refuel } from './entities/refuel.entity';
-import { VehicleService } from '../vehicle/vehicle.service';
 
 @Injectable()
 export class RefuelService {
   constructor(
     @InjectRepository(Refuel) private refuelRepo: Repository<Refuel>,
-    private vehicleService: VehicleService,
   ) {}
 
   async create(id_pojazdu: number, createRefuelDto: CreateRefuelDto): Promise<Refuel> {
-    const currentVehicle = await this.vehicleService.findOne(id_pojazdu);
-    if(!currentVehicle) {
-      throw new NotFoundException(`vehicle with id ${id_pojazdu} not found`)
-    }
     const refuelRecord = this.refuelRepo.create({ ...createRefuelDto, id_pojazdu })
     return this.refuelRepo.save(refuelRecord);
   }

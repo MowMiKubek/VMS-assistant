@@ -81,4 +81,22 @@ export class VehicleController {
     remove(@Param('id') id: string) {
         return this.vehicleService.remove(+id);
     }
+
+    @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
+    @ApiParam({ name: 'userId', example: 1, description: 'id of user' })
+    @ApiOkResponse({ description: 'vehicle updated successfully, vehicle object as response', type: Vehicle })
+    @ApiNotFoundResponse({ description: 'vehicle or user with given id does not exist' })
+    @ApiBadRequestResponse({ description: 'user does not have driving permission to given vehicle' })
+    @Patch(':id/assign/:userId')
+    assignVehicle(@Param('id') id: string, @Param('userId') userId: string) {
+        return this.vehicleService.assingUserToVehicle(+id, +userId);
+    }
+
+    @ApiParam({ name: 'id', example: 1, description: 'id of vehicle that will have owner removed' })
+    @ApiOkResponse({ description: 'vehicle owner unassigned (set to null), vehicle object as response', type: Vehicle })
+    @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
+    @Delete(':id/assign')
+    unassignVehicle(@Param('id') id: string) {
+        return this.vehicleService.unassingUserFromVehicle(+id);
+    }
 }

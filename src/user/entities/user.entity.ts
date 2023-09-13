@@ -4,6 +4,7 @@ import { Vehicle } from "../..//vehicle/entities/vehicle.entity";
 import { Ticket } from "../..//tickets/entities/ticket.entity";
 import { Exclude } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
+import { Permission } from "./permissions.entity";
 
 @Entity({name: 'users'})
 export class User {
@@ -40,4 +41,7 @@ export class User {
 
     @OneToMany(() => Ticket, ticket => ticket.user)
     mandaty: Promise<Ticket[]>
+
+    @OneToMany(() => Permission, permission => permission.user, { eager: true })
+    permissions: Permission[];
 }
