@@ -13,6 +13,10 @@ Swagger documentation is avalible in route /docs, after application is launched
 
 ## Installation
 
+For these project you need to have installed [nodeJS](https://nodejs.org/en/download/) version 16 or higher. If that requirement is satisfied, you can install all npm modules by running command below.
+
+At this point it is also required to have running sql server with project database (see [Database migrations](#database-migrations))
+
 ```bash
 $ npm install
 ```
@@ -58,7 +62,9 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-### Database migrations (not implemented yet)
+### Database migrations
+
+For initializing project database you should just run latest migration (`migration:run` command)
 
 ```bash
 # generate migration
@@ -74,6 +80,6 @@ $ npm run migation:revert
 ## Contributors
 
 - Jakub Maciej Tkaczyk - backend developer, [Github](https://github.com/MowMiKubek)
-- Adam Walachniewicz - frontend developer
+- Adam Walachniewicz - frontend developer [Github](https://github.com/AdamWalachniewicz)
 - Radosław Tomczyk - mobile/frontend developer, [Github](https://github.com/radektomczyk)
 - dr Beata Pańczyk - thesis supervisor

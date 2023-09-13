@@ -1,5 +1,5 @@
 import { IsString, IsEmail, IsEnum, IsOptional } from "class-validator";
-import { Role } from "../role.enum";
+import { Role } from "../../auth/role/role.enum";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateUserDto {

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Role } from "../role.enum";
+import { Role } from "../../auth/role/role.enum";
 import { Vehicle } from "../..//vehicle/entities/vehicle.entity";
 import { Ticket } from "../..//tickets/entities/ticket.entity";
 import { Exclude } from "class-transformer";
@@ -33,7 +33,7 @@ export class User {
     haslo: string;
 
     @ApiProperty({ example: Role.User, default: Role.User })
-    @Column({ default: Role.User })
+    @Column({ type: 'enum', enum: Role, default: Role.User })
     rola: Role;
 
     @OneToMany(() => Vehicle, vehicle => vehicle.user)

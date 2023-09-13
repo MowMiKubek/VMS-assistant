@@ -13,7 +13,9 @@ import { AuthGuard } from './guards/auth.guard';
 import {
     ApiBadRequestResponse,
     ApiCreatedResponse,
+    ApiForbiddenResponse,
     ApiHeader,
+    ApiHeaders,
     ApiOkResponse,
     ApiProperty,
     ApiTags,
@@ -21,6 +23,9 @@ import {
     ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { User } from '../user/entities/user.entity';
+import { Role } from './role/role.enum';
+import { Roles } from './role/role.decorator';
+import { RolesGuard } from './guards/role.guard';
 
 class LoginResponse {
     @ApiProperty({
@@ -76,9 +81,51 @@ export class AuthController {
     @ApiUnauthorizedResponse({
         description: 'Invalid access_token',
     })
-    @UseGuards(AuthGuard)
+    @UseGuards(RolesGuard)
     @Get('profile')
     profile(@Request() req) {
         return `Witaj ${req.user.login}, id: ${req.user.id}`;
+    }
+
+    @ApiHeader({
+        name: 'authorization',
+        description: 'JWT access token',
+    })
+    @ApiOkResponse({
+        description:
+            'User greeting message as response, if provided token is valid',
+    })
+    @ApiUnauthorizedResponse({
+        description: 'Invalid access_token',
+    })
+    @ApiForbiddenResponse({
+        description: 'User does not have sufficient role',
+    })
+    @Get('test/admin')
+    @UseGuards(RolesGuard)
+    @Roles(Role.Admin)
+    testAdmin() {
+        return 'Admin route';
+    }
+    
+    @ApiHeader({
+        name: 'authorization',
+        description: 'JWT access token',
+    })
+    @ApiOkResponse({
+        description:
+            'User greeting message as response, if provided token is valid',
+    })
+    @ApiUnauthorizedResponse({
+        description: 'Invalid access_token',
+    })
+    @ApiForbiddenResponse({
+        description: 'User does not have sufficient role',
+    })
+    @Get('test/manager')
+    @UseGuards(RolesGuard)
+    @Roles(Role.Manager)
+    testManager() {
+        return 'Manager route';
     }
 }
