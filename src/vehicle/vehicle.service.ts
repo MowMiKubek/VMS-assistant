@@ -10,12 +10,15 @@ import { Vehicle } from './entities/vehicle.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { Refuel } from '../refuel/entities/refuel.entity';
 import { User } from 'src/user/entities/user.entity';
+import { Mileage } from './entities/mileage.entity';
+import { CreateMileageDto } from './dto/create-mileage.dto';
 
 @Injectable()
 export class VehicleService {
     constructor(
         @InjectRepository(Vehicle) private vehicleRepo: Repository<Vehicle>,
         @InjectRepository(User) private userRepo: Repository<User>,
+        @InjectRepository(Mileage) private mileageRepo: Repository<Mileage>,
     ) {}
 
     create(createVehicleDto: CreateVehicleDto): Promise<Vehicle> {
@@ -54,6 +57,37 @@ export class VehicleService {
         }
         const refuelList = await currentVehicle.tankowania;
         return refuelList;
+    }
+
+    async getMileageList(id_pojazdu: number): Promise<Mileage[]> {
+        const currentVehicle = await this.vehicleRepo.findOneBy({ id_pojazdu });
+        if(!currentVehicle) {
+            throw new NotFoundException('vehicle not found');
+        }
+        const mileageList = await currentVehicle.przebiegi;
+        return mileageList;
+    }
+
+    async getLatestMileage(id_pojazdu: number): Promise<Mileage | {}> {
+        const mileageList = await this.getMileageList(id_pojazdu);
+        // handle empty list
+        if(mileageList.length === 0) {
+            return {};
+        }
+        const latestMileage = mileageList.reduce((prev, current) => {
+            return prev.data > current.data ? prev : current;
+        });
+        return latestMileage
+    }
+
+    async addMileage(id_pojazdu: number, mileage: CreateMileageDto): Promise<Mileage> {
+        const newMileage = this.mileageRepo.create({...mileage, id_pojazdu});
+        console.log(newMileage);
+        return this.mileageRepo.save(newMileage);
+    }
+
+    async deleteMileage(id_przebiegu: number): Promise<DeleteResult> {
+        return this.mileageRepo.delete({ id_przebiegu });
     }
 
     async assingUserToVehicle(

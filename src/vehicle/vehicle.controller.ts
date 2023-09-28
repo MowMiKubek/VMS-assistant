@@ -19,8 +19,13 @@ import {
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
+
 import { Vehicle } from './entities/vehicle.entity';
 import { Refuel } from '../refuel/entities/refuel.entity';
+import { Mileage } from './entities/mileage.entity';
+import { CreateMileageDto } from './dto/create-mileage.dto';
+import { DeleteResult } from 'typeorm';
+
 
 @ApiTags('vehicle')
 @Controller('vehicle')
@@ -56,6 +61,37 @@ export class VehicleController {
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.vehicleService.findOne(+id);
+    }
+
+    @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
+    @ApiOkResponse({ description: 'list mileage records of the vehicle', type: [Mileage] })
+    @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
+    @Get(':id/mileage')
+    getMileage(@Param('id') id: string) {
+        return this.vehicleService.getMileageList(+id);
+    }
+
+    @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
+    @ApiOkResponse({ description: 'latest mileage record of the vehicle or empty object if no record is present', type: Mileage })
+    @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
+    @Get(':id/mileage/latest')
+    getLatestMileage(@Param('id') id: string) {
+        return this.vehicleService.getLatestMileage(+id);
+    }
+
+    @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
+    @ApiOkResponse({ description: 'mileage record created successfully, mileage object as response', type: Mileage })
+    @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
+    @Post(':id/mileage')
+    addMileage(@Param('id') id: string, @Body() mileage: CreateMileageDto) {
+        return this.vehicleService.addMileage(+id, mileage);
+    }
+
+    @ApiParam({ name: 'mileageId', example: 1, description: 'id of mileage record' })
+    @ApiOkResponse({ description: 'mileage record deleted successfully, DeleteResult object as response', type: DeleteResult })
+    @Delete('mileage/:mileageId')
+    deleteMileage(@Param('mileageId') mileageId: string) {
+        return this.vehicleService.deleteMileage(+mileageId);
     }
 
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })

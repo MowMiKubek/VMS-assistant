@@ -3,6 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { FuelType } from "../fueltype.enum";
 import { Refuel } from "../..//refuel/entities/refuel.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { Mileage } from "./mileage.entity";
 
 
 @Entity({ name: 'pojazdy' })
@@ -53,4 +54,7 @@ export class Vehicle {
 
     @OneToMany(() => Refuel, refuel => refuel.pojazd)
     tankowania: Promise<Refuel[]>;
+
+    @OneToMany(() => Mileage, mileage => mileage.pojazd)
+    przebiegi: Promise<Mileage[]>;
 }

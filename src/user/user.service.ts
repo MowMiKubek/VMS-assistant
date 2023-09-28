@@ -74,6 +74,15 @@ export class UserService {
         return tickets;
     }
 
+    async getCosts(id_user: number) {
+        const user = await this.findOne(id_user);
+        if(!user) {
+            throw new NotFoundException(`User with id ${id_user} does not exits`);
+        }
+        const costs = await user.koszty;
+        return costs;
+    }
+
     async addPermission(id_user: number, permission: CreatePermissionDto) {
         // insert many raeords at once
         const user = await this.findOne(id_user);
