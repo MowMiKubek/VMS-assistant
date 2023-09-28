@@ -38,10 +38,13 @@ export class UserService {
         if (!currentUser) {
             throw new NotFoundException('user not found');
         }
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(updateUserDto.haslo, salt);
-        
+        let hash = currentUser.haslo;
+        if(updateUserDto.haslo) {
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(updateUserDto.haslo, salt);
+        }
         Object.assign(currentUser, {...updateUserDto, haslo: hash});
+        console.log(currentUser);
         return this.userRepo.save(currentUser);
     }
 

@@ -29,7 +29,7 @@ export class AuthService {
         }
 
         // After user is verified, sign jwt token
-        const payload = { id_user: currentUser.id_user, login: currentUser.login };
+        const payload = { id: currentUser.id_user, login: currentUser.login, role: currentUser.rola };
         return {
             access_token: await this.jwtService.signAsync(payload)
         }
