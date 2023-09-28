@@ -20,7 +20,7 @@ export class Cost {
     koszt: number;
 
     @ApiProperty({ example: '2021-08-10T15:00.00Z' })
-    @Column({ type: Date })
+    @Column({ type: Date, default: () => 'CURRENT_TIMESTAMP' })
     data: Date;
 
     @ApiProperty({ example: 1 })

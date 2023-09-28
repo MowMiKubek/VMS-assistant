@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString, IsInt, IsNumber, IsString } from "class-validator";
+import { IsDateString, IsInt, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateCostDto {
     @ApiProperty({ example: 'Mycie samochodu' })
@@ -16,9 +16,6 @@ export class CreateCostDto {
 
     @ApiProperty({ example: '2021-08-10T15:00.00Z' })
     @IsDateString()
+    @IsOptional()
     data: Date;
-
-    @ApiProperty({ example: 1 })
-    @IsNumber()
-    id_user: number;
 }

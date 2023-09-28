@@ -43,7 +43,7 @@ export class CostsController {
 
   @ApiOperation({ summary: 'Delete a cost by ID' })
   @ApiOkResponse({ description: 'The cost has been successfully deleted.' })
-  @ApiParam({ name: 'id', description: 'The ID of the cost to delete.', example: 1 })
+  @ApiParam({ name: 'id', description: 'The ID of the cost to delete.', example: 1  })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.costsService.remove(+id);

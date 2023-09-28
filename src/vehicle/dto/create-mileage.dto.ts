@@ -10,5 +10,6 @@ export class CreateMileageDto {
 
     @ApiProperty({ example: '2021-08-10T15:00.00Z', description: 'date of the mileage record', required: false })
     @IsDateString()
+    @IsOptional()
     data: Date;
 }

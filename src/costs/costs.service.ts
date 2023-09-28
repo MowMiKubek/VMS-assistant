@@ -9,8 +9,8 @@ import { Repository } from 'typeorm';
 export class CostsService {
   constructor(@InjectRepository(Cost) private costRepo: Repository<Cost>) {}
 
-  create(userId: number, createCostDto: CreateCostDto) {
-    const newCost = this.costRepo.create({ ...createCostDto, id_user: userId });
+  create(id_user: number, createCostDto: CreateCostDto) {
+    const newCost = this.costRepo.create({ ...createCostDto, id_user });
     return this.costRepo.save(newCost);
   }
 
