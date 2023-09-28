@@ -15,6 +15,7 @@ import {
     ApiCreatedResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
+    ApiOperation,
     ApiParam,
     ApiTags,
 } from '@nestjs/swagger';
@@ -26,6 +27,7 @@ import { DeleteResult } from 'typeorm';
 export class TicketsController {
     constructor(private readonly ticketsService: TicketsService) {}
 
+    @ApiOperation({ summary: 'Create ticket' })
     @ApiCreatedResponse({
         description: 'Ticket was created, ticket object as response',
         type: Ticket,
@@ -50,6 +52,7 @@ export class TicketsController {
         return this.ticketsService.create(+userId, createTicketDto);
     }
 
+    @ApiOperation({ summary: 'Get all tickets' })
     @ApiOkResponse({
         description: 'List of tickets as response',
         type: [Ticket],
@@ -58,6 +61,8 @@ export class TicketsController {
     findAll() {
         return this.ticketsService.findAll();
     }
+
+    @ApiOperation({ summary: 'Get ticket by id' })
     @ApiOkResponse({
         description: 'Ticket object as response',
         type: Ticket,
@@ -66,6 +71,8 @@ export class TicketsController {
     findOne(@Param('id') id: string) {
         return this.ticketsService.findOne(+id);
     }
+
+    @ApiOperation({ summary: 'Update ticket by id' })
     @ApiOkResponse({
         description:
             'Ticket record successfully updated, Ticket object as response',
@@ -78,6 +85,8 @@ export class TicketsController {
     update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
         return this.ticketsService.update(+id, updateTicketDto);
     }
+
+    @ApiOperation({ summary: 'Delete ticket by id' })
     @ApiOkResponse({
         description: 'DeleteResult object as response',
         type: DeleteResult,

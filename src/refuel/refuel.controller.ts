@@ -15,6 +15,7 @@ import {
     ApiCreatedResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
+    ApiOperation,
     ApiParam,
     ApiTags,
 } from '@nestjs/swagger';
@@ -26,6 +27,7 @@ import { DeleteResult } from 'typeorm';
 export class RefuelController {
     constructor(private readonly refuelService: RefuelService) {}
 
+    @ApiOperation({ summary: 'Create refuel' })
     @ApiCreatedResponse({
         description: 'Refuel record was created, refuel object as response',
         type: Refuel,
@@ -50,6 +52,8 @@ export class RefuelController {
         return this.refuelService.create(+vehicleId, createRefuelDto);
     }
 
+
+    @ApiOperation({ summary: 'Get all refuel records' })
     @ApiOkResponse({
         description: 'List of refuel records as response',
         type: [Refuel],
@@ -59,6 +63,8 @@ export class RefuelController {
         return this.refuelService.findAll();
     }
 
+
+    @ApiOperation({ summary: 'Get refuel record by id' })
     @ApiOkResponse({
         description: 'Refuel object as response',
         type: Refuel,
@@ -68,6 +74,8 @@ export class RefuelController {
         return this.refuelService.findOne(+id);
     }
 
+
+    @ApiOperation({ summary: 'Update refuel record' })
     @ApiOkResponse({
         description:
             'Refuel record successfully updated, refuel object as response',
@@ -81,6 +89,8 @@ export class RefuelController {
         return this.refuelService.update(+id, updateRefuelDto);
     }
 
+
+    @ApiOperation({ summary: 'Delete refuel record' })
     @ApiOkResponse({
       description: 'DeleteResult object as response',
       type: DeleteResult

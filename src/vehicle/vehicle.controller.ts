@@ -15,6 +15,7 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiParam,
   ApiTags,
   ApiUnprocessableEntityResponse,
@@ -32,6 +33,7 @@ import { DeleteResult } from 'typeorm';
 export class VehicleController {
     constructor(private readonly vehicleService: VehicleService) {}
 
+    @ApiOperation({ summary: 'Create vehicle' })
     @ApiCreatedResponse({
         description: 'Vehicle was created, vehicle object as response', type: Vehicle
     })
@@ -48,6 +50,7 @@ export class VehicleController {
         return this.vehicleService.create(createVehicleDto);
     }
 
+    @ApiOperation({ summary: 'Get all vehicles' })
     @ApiOkResponse({
       description: 'List of vehicles as response', type: [Vehicle]
     })
@@ -56,6 +59,7 @@ export class VehicleController {
         return this.vehicleService.findAll();
     }
 
+    @ApiOperation({ summary: 'Get vehicle by id' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
     @ApiOkResponse({ description: 'Vehicle object or empty object as response', type: Vehicle })
     @Get(':id')
@@ -63,6 +67,8 @@ export class VehicleController {
         return this.vehicleService.findOne(+id);
     }
 
+
+    @ApiOperation({ summary: 'Get vehicle by id' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
     @ApiOkResponse({ description: 'list mileage records of the vehicle', type: [Mileage] })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
@@ -71,6 +77,7 @@ export class VehicleController {
         return this.vehicleService.getMileageList(+id);
     }
 
+    @ApiOperation({ summary: 'Get latest mileage record of the vehicle' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
     @ApiOkResponse({ description: 'latest mileage record of the vehicle or empty object if no record is present', type: Mileage })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
@@ -79,6 +86,7 @@ export class VehicleController {
         return this.vehicleService.getLatestMileage(+id);
     }
 
+    @ApiOperation({ summary: 'Create mileage record for the vehicle' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
     @ApiOkResponse({ description: 'mileage record created successfully, mileage object as response', type: Mileage })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
@@ -87,6 +95,8 @@ export class VehicleController {
         return this.vehicleService.addMileage(+id, mileage);
     }
 
+
+    @ApiOperation({ summary: 'Delete mileage record of the vehicle' })
     @ApiParam({ name: 'mileageId', example: 1, description: 'id of mileage record' })
     @ApiOkResponse({ description: 'mileage record deleted successfully, DeleteResult object as response', type: DeleteResult })
     @Delete('mileage/:mileageId')
@@ -94,6 +104,8 @@ export class VehicleController {
         return this.vehicleService.deleteMileage(+mileageId);
     }
 
+
+    @ApiOperation({ summary: 'Get refuel records of the vehicle' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
     @ApiOkResponse({ description: 'list refuel record of the vehicle', type: [Refuel] })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
@@ -102,6 +114,8 @@ export class VehicleController {
         return this.vehicleService.getRefuel(+id);
     }
 
+
+    @ApiOperation({ summary: 'Create refuel record for the vehicle' })
     @ApiOkResponse({ description: 'vehicle updated successfully, user object as response', type: Vehicle })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @Patch(':id')
@@ -112,12 +126,16 @@ export class VehicleController {
         return this.vehicleService.update(+id, updateVehicleDto);
     }
     
+
+    @ApiOperation({ summary: 'Delete vehicle by id' })
     @ApiOkResponse({ description: 'Object contaning field "affected", which is number of removed records' })
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.vehicleService.remove(+id);
     }
 
+
+    @ApiOperation({ summary: 'Assign vehicle to user' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
     @ApiParam({ name: 'userId', example: 1, description: 'id of user' })
     @ApiOkResponse({ description: 'vehicle updated successfully, vehicle object as response', type: Vehicle })
@@ -128,6 +146,8 @@ export class VehicleController {
         return this.vehicleService.assingUserToVehicle(+id, +userId);
     }
 
+
+    @ApiOperation({ summary: 'Unassign vehicle from user' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle that will have owner removed' })
     @ApiOkResponse({ description: 'vehicle owner unassigned (set to null), vehicle object as response', type: Vehicle })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
