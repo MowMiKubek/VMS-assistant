@@ -13,6 +13,13 @@ async function bootstrap() {
   }));
   app.useGlobalFilters(new TypeOrmExceptionFilter());
 
+  // CORS setup
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   // Swagger setup
   const config = new DocumentBuilder()
     .setTitle('Vehicle managment system')
