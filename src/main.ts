@@ -25,6 +25,13 @@ async function bootstrap() {
     .setTitle('Vehicle managment system')
     .setDescription('Documentation for vehicle managment system')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      description: 'Enter JWT token in the format \'Bearer token\'',
+      in: 'header',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

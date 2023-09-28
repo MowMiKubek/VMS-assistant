@@ -12,11 +12,13 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthGuard } from './guards/auth.guard';
 import {
     ApiBadRequestResponse,
+    ApiBearerAuth,
     ApiCreatedResponse,
     ApiForbiddenResponse,
     ApiHeader,
     ApiHeaders,
     ApiOkResponse,
+    ApiOperation,
     ApiProperty,
     ApiTags,
     ApiUnauthorizedResponse,
@@ -40,6 +42,7 @@ class LoginResponse {
 export class AuthController {
     constructor(private authService: AuthService) {}
 
+    @ApiOperation({ summary: 'Login user' })
     @ApiOkResponse({
         description: 'User successfully logged in, jwt token in response',
         type: LoginResponse,
@@ -53,6 +56,8 @@ export class AuthController {
         return this.authService.singIn(loginDto);
     }
 
+
+    @ApiOperation({ summary: 'Register user' })
     @ApiCreatedResponse({
         description: 'User was created, user object as response',
         type: User,
@@ -70,10 +75,13 @@ export class AuthController {
         return this.authService.singUp(createUserDto);
     }
 
+
+    @ApiOperation({ summary: 'Refresh access token' })
     @ApiHeader({
-        name: 'authorization',
+        name: 'Authorization',
         description: 'JWT access token',
     })
+    @ApiBearerAuth()
     @ApiOkResponse({
         description:
             'User greeting message as response, if provided token is valid',
@@ -87,10 +95,12 @@ export class AuthController {
         return `Witaj ${req.user.login}, id: ${req.user.id}`;
     }
 
+    @ApiOperation({ summary: 'Refresh access token' })
     @ApiHeader({
         name: 'authorization',
         description: 'JWT access token',
     })
+    @ApiBearerAuth()
     @ApiOkResponse({
         description:
             'User greeting message as response, if provided token is valid',
@@ -108,10 +118,13 @@ export class AuthController {
         return 'Admin route';
     }
     
+
+    @ApiOperation({ summary: 'Refresh access token' })
     @ApiHeader({
         name: 'authorization',
         description: 'JWT access token',
     })
+    @ApiBearerAuth()
     @ApiOkResponse({
         description:
             'User greeting message as response, if provided token is valid',
