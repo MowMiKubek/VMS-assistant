@@ -12,6 +12,7 @@ import { Refuel } from '../refuel/entities/refuel.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Mileage } from './entities/mileage.entity';
 import { CreateMileageDto } from './dto/create-mileage.dto';
+import { History } from './entities/history.entity';
 
 @Injectable()
 export class VehicleService {
@@ -19,6 +20,7 @@ export class VehicleService {
         @InjectRepository(Vehicle) private vehicleRepo: Repository<Vehicle>,
         @InjectRepository(User) private userRepo: Repository<User>,
         @InjectRepository(Mileage) private mileageRepo: Repository<Mileage>,
+        @InjectRepository(History) private historyRepo: Repository<History>,
     ) {}
 
     create(createVehicleDto: CreateVehicleDto): Promise<Vehicle> {
@@ -82,7 +84,6 @@ export class VehicleService {
 
     async addMileage(id_pojazdu: number, mileage: CreateMileageDto): Promise<Mileage> {
         const newMileage = this.mileageRepo.create({...mileage, id_pojazdu});
-        console.log(newMileage);
         return this.mileageRepo.save(newMileage);
     }
 
@@ -99,12 +100,12 @@ export class VehicleService {
             this.userRepo.findOneBy({ id_user: userId }),
             this.vehicleRepo.findOneBy({ id_pojazdu: id_vehicle }),
         ]);
-        console.log(user, vehicle);
         // if user or vehicle not found, throw exception
         if (!user || !vehicle) {
             throw new NotFoundException('user or vehicle not found');
         }
         // assign user to vehicle if has permissions or vehicle does not need permissions
+        // add history entry
         if (
             !vehicle.kategoria ||
             user.permissions.some(
@@ -112,6 +113,31 @@ export class VehicleService {
                     user_permission.kategoria === vehicle.kategoria,
             )
         ) {
+            // select latest history entry which has current vehilcleID, current userID and no end date
+            const oldUserId = vehicle.id_user;
+            const latestHistoryEntry = await this.historyRepo
+                .createQueryBuilder('history')
+                .where('history.id_pojazdu = :id_pojazdu', { id_pojazdu: id_vehicle })
+                .andWhere('history.id_user = :id_user', { id_user: oldUserId })
+                .andWhere('history.koniec IS NULL')
+                .getOne();
+
+            // if such entry exists, update it with current date
+            if (latestHistoryEntry) {
+                latestHistoryEntry.koniec = new Date();
+                await this.historyRepo.save(latestHistoryEntry);
+            }
+            // create new history entry which has current vehilcleID, current userID and no end date
+            const historyEntry = this.historyRepo.create({
+                id_pojazdu: id_vehicle,
+                id_user: userId,
+                poczatek: new Date(),
+            });
+            
+            // save history entry and vehicle
+            await this.historyRepo.save(historyEntry);
+
+            // assign vehicle to user
             vehicle.id_user = userId;
             return this.vehicleRepo.save(vehicle);
         }
@@ -125,6 +151,21 @@ export class VehicleService {
         if (!vehicle) {
             throw new NotFoundException('vehicle not found');
         }
+
+        // modify history record
+        const latestHistoryEntry = await this.historyRepo
+        .createQueryBuilder('history')
+        .where('history.id_pojazdu = :id_pojazdu', { id_pojazdu: id_vehicle })
+        .andWhere('history.koniec IS NULL')
+        .getOne();
+
+        // if such entry exists, update it with current date
+        if (latestHistoryEntry) {
+            latestHistoryEntry.koniec = new Date();
+            await this.historyRepo.save(latestHistoryEntry);
+        }
+
+        // unassign vehicle from user
         vehicle.id_user = null;
         return this.vehicleRepo.save(vehicle);
     }
