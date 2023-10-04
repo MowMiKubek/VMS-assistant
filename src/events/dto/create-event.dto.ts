@@ -19,10 +19,12 @@ export class CreateEventDto {
     koszt: number;
 
     @ApiProperty({ example: 1 })
+    @IsOptional()
     @IsIn([0, 1])
     czy_przypomniec: number;
 
     @ApiProperty({ example: 1 })
+    @IsOptional()
     @IsIn([0, 1])
     czy_okresowe: number;
 
