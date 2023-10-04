@@ -18,6 +18,7 @@ import {
     ApiOperation,
     ApiParam,
     ApiTags,
+    ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { Ticket } from './entities/ticket.entity';
 import { DeleteResult } from 'typeorm';
@@ -32,8 +33,8 @@ export class TicketsController {
         description: 'Ticket was created, ticket object as response',
         type: Ticket,
     })
-    @ApiNotFoundResponse({
-        description: 'Ticket with given id does not exist',
+    @ApiUnprocessableEntityResponse({
+        description: 'User with given id does not exist',
     })
     @ApiBadRequestResponse({
         description:

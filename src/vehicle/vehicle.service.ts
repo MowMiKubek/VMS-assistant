@@ -8,11 +8,13 @@ import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vehicle } from './entities/vehicle.entity';
 import { DeleteResult, Repository } from 'typeorm';
+import { CreateMileageDto } from './dto/create-mileage.dto';
+
 import { Refuel } from '../refuel/entities/refuel.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Mileage } from './entities/mileage.entity';
-import { CreateMileageDto } from './dto/create-mileage.dto';
 import { History } from './entities/history.entity';
+import { Event } from 'src/events/entities/event.entity';
 
 @Injectable()
 export class VehicleService {
@@ -61,6 +63,15 @@ export class VehicleService {
         return refuelList;
     }
 
+    async getEvents(id: number): Promise<Event[]> {
+        const currentVehicle = await this.findOne(id);
+        if (!currentVehicle) {
+            throw new NotFoundException('vehicle not found');
+        }
+        const eventList = await currentVehicle.wydarzenia;
+        return eventList;
+    }
+
     async getMileageList(id_pojazdu: number): Promise<Mileage[]> {
         const currentVehicle = await this.vehicleRepo.findOneBy({ id_pojazdu });
         if(!currentVehicle) {
@@ -91,10 +102,7 @@ export class VehicleService {
         return this.mileageRepo.delete({ id_przebiegu });
     }
 
-    async assingUserToVehicle(
-        id_vehicle: number,
-        userId: number,
-    ): Promise<Vehicle> {
+    async assingUserToVehicle(id_vehicle: number, userId: number): Promise<Vehicle> {
         // resolve user and vehicle with Promise.all
         const [user, vehicle] = await Promise.all([
             this.userRepo.findOneBy({ id_user: userId }),
@@ -106,13 +114,11 @@ export class VehicleService {
         }
         // assign user to vehicle if has permissions or vehicle does not need permissions
         // add history entry
-        if (
-            !vehicle.kategoria ||
-            user.permissions.some(
+        if (!vehicle.kategoria || user.permissions.some(
                 (user_permission) =>
                     user_permission.kategoria === vehicle.kategoria,
-            )
-        ) {
+            )) 
+        {
             // select latest history entry which has current vehilcleID, current userID and no end date
             const oldUserId = vehicle.id_user;
             const latestHistoryEntry = await this.historyRepo

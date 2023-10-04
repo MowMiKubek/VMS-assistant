@@ -27,7 +27,6 @@ import { Mileage } from './entities/mileage.entity';
 import { CreateMileageDto } from './dto/create-mileage.dto';
 import { DeleteResult } from 'typeorm';
 
-
 @ApiTags('vehicle')
 @Controller('vehicle')
 export class VehicleController {
@@ -97,11 +96,11 @@ export class VehicleController {
 
 
     @ApiOperation({ summary: 'Delete mileage record of the vehicle' })
-    @ApiParam({ name: 'mileageId', example: 1, description: 'id of mileage record' })
+    @ApiParam({ name: 'mileageid', example: 1, description: 'id of mileage record' })
     @ApiOkResponse({ description: 'mileage record deleted successfully, DeleteResult object as response', type: DeleteResult })
-    @Delete('mileage/:mileageId')
-    deleteMileage(@Param('mileageId') mileageId: string) {
-        return this.vehicleService.deleteMileage(+mileageId);
+    @Delete('mileage/:mileageid')
+    deleteMileage(@Param('mileageid') mileageid: string) {
+        return this.vehicleService.deleteMileage(+mileageid);
     }
 
 
@@ -114,6 +113,14 @@ export class VehicleController {
         return this.vehicleService.getRefuel(+id);
     }
 
+    @ApiOperation({ summary: 'Get event list of the vehicle' })
+    @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
+    @ApiOkResponse({ description: 'list events associated the vehicle', type: [Event] })
+    @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
+    @Get(':id/events')
+    getEvents(@Param('id') id: string) {
+        return this.vehicleService.getEvents(+id);
+    }
 
     @ApiOperation({ summary: 'Create refuel record for the vehicle' })
     @ApiOkResponse({ description: 'vehicle updated successfully, user object as response', type: Vehicle })
@@ -137,13 +144,13 @@ export class VehicleController {
 
     @ApiOperation({ summary: 'Assign vehicle to user' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
-    @ApiParam({ name: 'userId', example: 1, description: 'id of user' })
+    @ApiParam({ name: 'userid', example: 1, description: 'id of user' })
     @ApiOkResponse({ description: 'vehicle updated successfully, vehicle object as response', type: Vehicle })
     @ApiNotFoundResponse({ description: 'vehicle or user with given id does not exist' })
     @ApiBadRequestResponse({ description: 'user does not have driving permission to given vehicle' })
-    @Patch(':id/assign/:userId')
-    assignVehicle(@Param('id') id: string, @Param('userId') userId: string) {
-        return this.vehicleService.assingUserToVehicle(+id, +userId);
+    @Patch(':id/assign/:userid')
+    assignVehicle(@Param('id') id: string, @Param('userid') userid: string) {
+        return this.vehicleService.assingUserToVehicle(+id, +userid);
     }
 
 

@@ -18,6 +18,7 @@ import {
     ApiOperation,
     ApiParam,
     ApiTags,
+    ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { Refuel } from './entities/refuel.entity';
 import { DeleteResult } from 'typeorm';
@@ -32,7 +33,7 @@ export class RefuelController {
         description: 'Refuel record was created, refuel object as response',
         type: Refuel,
     })
-    @ApiNotFoundResponse({
+    @ApiUnprocessableEntityResponse({
         description: 'Refuel record with given id does not exist',
     })
     @ApiBadRequestResponse({

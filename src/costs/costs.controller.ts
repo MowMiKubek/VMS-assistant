@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CostsService } from './costs.service';
 import { CreateCostDto } from './dto/create-cost.dto';
 import { UpdateCostDto } from './dto/update-cost.dto';
-import { ApiCreatedResponse, ApiOperation, ApiParam, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation, ApiParam, ApiOkResponse, ApiTags, ApiUnprocessableEntityResponse, ApiBadRequestResponse } from '@nestjs/swagger';
 import { Cost } from './entities/cost.entity';
 
 @ApiTags('costs')
@@ -12,6 +12,8 @@ export class CostsController {
 
   @ApiOperation({ summary: 'Create a new cost' })
   @ApiCreatedResponse({ description: 'The cost has been successfully created.', type: Cost })
+  @ApiUnprocessableEntityResponse({ description: 'User with given id does not exist' })
+  @ApiBadRequestResponse({ description: 'Incorrect fields in request body' })
   @ApiParam({ name: 'userid', description: 'The ID of the user who owns the cost.', example: 1 })
   @Post(':userid')
   create(@Param('userid') userId, @Body() createCostDto: CreateCostDto) {

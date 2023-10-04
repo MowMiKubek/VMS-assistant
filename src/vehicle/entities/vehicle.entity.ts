@@ -1,9 +1,10 @@
-import { User } from "../..//user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ApiProperty } from "@nestjs/swagger";
 import { FuelType } from "../fueltype.enum";
 import { Refuel } from "../..//refuel/entities/refuel.entity";
-import { ApiProperty } from "@nestjs/swagger";
+import { User } from "../..//user/entities/user.entity";
 import { Mileage } from "./mileage.entity";
+import { Event } from "../../events/entities/event.entity";
 
 
 @Entity({ name: 'pojazdy' })
@@ -48,6 +49,7 @@ export class Vehicle {
     @Column({ nullable: true })
     id_user: number;
 
+    // relations
     @ManyToOne(() => User, user => user.pojazdy, { nullable: true })
     @JoinColumn({ name: "id_user" })
     user: User;
@@ -57,4 +59,7 @@ export class Vehicle {
 
     @OneToMany(() => Mileage, mileage => mileage.pojazd)
     przebiegi: Promise<Mileage[]>;
+
+    @OneToMany(() => Event, wydarzenie => wydarzenie.pojazd )
+    wydarzenia: Promise<Event[]>;
 }

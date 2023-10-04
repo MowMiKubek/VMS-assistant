@@ -1,0 +1,34 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { IsDateString, IsIn, IsInt, IsString, IsPositive, IsOptional } from "class-validator";
+
+export class CreateEventDto {
+    @ApiProperty({ example: 'Przegląd samochodu' })
+    @IsString()
+    nazwa: string;
+
+    @ApiProperty({ example: 'Przegląd techniczny samochodu' })
+    @IsString()
+    opis: string;
+
+    @ApiProperty({ example: '2023-08-10T15:00.00Z' })
+    @IsDateString()
+    data: Date;
+
+    @ApiProperty({ example: 10000 })
+    @IsInt()
+    koszt: number;
+
+    @ApiProperty({ example: 1 })
+    @IsIn([0, 1])
+    czy_przypomniec: number;
+
+    @ApiProperty({ example: 1 })
+    @IsIn([0, 1])
+    czy_okresowe: number;
+
+    @ApiProperty({ example: 12 })
+    @IsOptional()
+    @IsInt()
+    @IsPositive()
+    okres: number;
+}
