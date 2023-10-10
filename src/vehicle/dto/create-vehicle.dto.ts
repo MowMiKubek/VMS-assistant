@@ -1,4 +1,4 @@
-import { IsDateString, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
 import { FuelType } from "../fueltype.enum";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -32,6 +32,7 @@ export class CreateVehicleDto {
     })
     @IsOptional()
     @IsString()
+    @MaxLength(17)
     VIN: string;
     
     @ApiProperty({
@@ -44,8 +45,8 @@ export class CreateVehicleDto {
     nr_rejestracyjny: string;
     
     @ApiProperty({
-        description: 'first registration date',
-        example: '2023-08-10T15:00.00Z',
+        description: 'first registration date. WARNING - format: YYYY-MM-DD (YYYY-MM-DDThh:mm:ss.sssZ not secured!))',
+        example: '2023-08-10',
         required: false,
         type: Date
     })
@@ -56,13 +57,15 @@ export class CreateVehicleDto {
     @ApiProperty({
         description: 'type of fuel',
         example: FuelType.Diesel,
+        type: 'enum',
+        enum: FuelType
     })
     @IsEnum(FuelType)
     typ_paliwa: FuelType;
     
     @ApiProperty({
         description: 'vehicle category',
-        example: '###in development###',
+        example: 'B',
         required: false
     })
     @IsOptional()
