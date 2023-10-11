@@ -1,6 +1,8 @@
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
 import { FuelType } from "../fueltype.enum";
 import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
+import * as moment from "moment";
 
 export class CreateVehicleDto {
     @ApiProperty({
@@ -52,6 +54,7 @@ export class CreateVehicleDto {
     })
     @IsOptional()
     @IsDateString()
+    @Transform(({ value }) => moment(value).format('YYYY-MM-DD'))
     data_pierw_rej: Date;
 
     @ApiProperty({
@@ -64,7 +67,7 @@ export class CreateVehicleDto {
     typ_paliwa: FuelType;
     
     @ApiProperty({
-        description: 'vehicle category',
+        description: 'required driving category',
         example: 'B',
         required: false
     })
