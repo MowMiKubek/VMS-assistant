@@ -11,7 +11,7 @@ export class CreateTicketDto {
     @IsPositive()
     liczba_punktow: number;
 
-    @ApiProperty({ example: 24 })
+    @ApiProperty({ example: 12 })
     @IsInt()
     @IsPositive()
     waznosc: number;

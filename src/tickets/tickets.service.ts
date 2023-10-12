@@ -30,7 +30,7 @@ export class TicketsService {
       throw new NotFoundException(`ticket with id ${id} not found`);
     }
     Object.assign(currentTicket, updateTicketDto);
-    return currentTicket;
+    return this.ticketRepo.save(currentTicket);
   }
 
   remove(id_mandatu: number): Promise<DeleteResult> {
