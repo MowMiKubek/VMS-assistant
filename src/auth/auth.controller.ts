@@ -9,14 +9,12 @@ import {
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { AuthGuard } from './guards/auth.guard';
 import {
     ApiBadRequestResponse,
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiForbiddenResponse,
     ApiHeader,
-    ApiHeaders,
     ApiOkResponse,
     ApiOperation,
     ApiProperty,
