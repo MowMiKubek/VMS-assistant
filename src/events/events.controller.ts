@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -10,13 +10,20 @@ import {
   ApiBadRequestResponse, 
   ApiParam,
   ApiOkResponse,
-  ApiNotFoundResponse
+  ApiNotFoundResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
+import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Event } from './entities/event.entity';
 import { DeleteResult } from 'typeorm';
+import { Roles } from 'src/auth/role/role.decorator';
+import { Role } from 'src/auth/role/role.enum';
 
 @ApiTags('events')
+@ApiHeader({ name: 'Authorization', description: 'JWT access token' })
 @Controller('events')
+@UseGuards(RolesGuard)
+@Roles(Role.Manager)
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
