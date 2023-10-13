@@ -12,6 +12,7 @@ import {
   ApiOkResponse,
   ApiNotFoundResponse,
   ApiHeader,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Event } from './entities/event.entity';
@@ -21,6 +22,7 @@ import { Role } from 'src/auth/role/role.enum';
 
 @ApiTags('events')
 @ApiHeader({ name: 'Authorization', description: 'JWT access token' })
+@ApiBearerAuth()
 @Controller('events')
 @UseGuards(RolesGuard)
 @Roles(Role.Manager)

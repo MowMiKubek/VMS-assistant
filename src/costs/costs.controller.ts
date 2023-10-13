@@ -2,11 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request, ForbiddenEx
 import { CostsService } from './costs.service';
 import { CreateCostDto } from './dto/create-cost.dto';
 import { UpdateCostDto } from './dto/update-cost.dto';
-import { ApiCreatedResponse, ApiOperation, ApiParam, ApiOkResponse, ApiTags, ApiUnprocessableEntityResponse, ApiBadRequestResponse, ApiForbiddenResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation, ApiParam, ApiOkResponse, ApiTags, ApiUnprocessableEntityResponse, ApiBadRequestResponse, ApiForbiddenResponse, ApiHeader, ApiBearerAuth } from '@nestjs/swagger';
 import { Cost } from './entities/cost.entity';
 import { Role } from 'src/auth/role/role.enum';
 
 @ApiTags('costs')
+@ApiHeader({ name: 'Authorization', description: 'JWT access token' })
+@ApiBearerAuth()
 @Controller('costs')
 export class CostsController {
   constructor(private readonly costsService: CostsService) {}

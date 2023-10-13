@@ -15,6 +15,7 @@ import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import {
     ApiBadRequestResponse,
+    ApiBearerAuth,
     ApiCreatedResponse,
     ApiForbiddenResponse,
     ApiHeader,
@@ -31,8 +32,10 @@ import { DeleteResult } from 'typeorm';
 import { Role } from 'src/auth/role/role.enum';
 
 @ApiTags('tickets')
-@UseGuards(RolesGuard)
+@ApiHeader({ name: 'Authorization', description: 'JWT access token' })
+@ApiBearerAuth()
 @Controller('tickets')
+@UseGuards(RolesGuard)
 export class TicketsController {
     constructor(private readonly ticketsService: TicketsService) {}
 
