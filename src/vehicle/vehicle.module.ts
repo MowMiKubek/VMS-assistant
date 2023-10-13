@@ -11,5 +11,6 @@ import { History } from './entities/history.entity';
     imports: [TypeOrmModule.forFeature([Vehicle, User, Mileage, History])],
     controllers: [VehicleController],
     providers: [VehicleService],
+    exports: [VehicleService]
 })
 export class VehicleModule {}
