@@ -42,7 +42,10 @@ export class TicketsService {
 
   async remove(id_mandatu: number, user: any): Promise<DeleteResult> {
     const currentTicket = await this.findOne(id_mandatu);
-    if(currentTicket && user.role == Role.User && currentTicket.id_user != user.id) 
+    if(!currentTicket) {
+      throw new NotFoundException(`ticket with ${id_mandatu} not found`);
+    }
+    if(user.role == Role.User && currentTicket.id_user != user.id) 
       throw new ForbiddenException('Forbidden resource');
     return this.ticketRepo.delete({ id_mandatu })
   }

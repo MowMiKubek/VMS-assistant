@@ -19,8 +19,8 @@ export class CostsService {
     return this.costRepo.find({});
   }
 
-  findOneByUserId(id_user: number) {
-    return this.costRepo.findOneBy({ id_user });
+  findByUserId(id_user: number) {
+    return this.costRepo.findBy({ id_user });
   }
 
   findOne(id_kosztu: number) {
@@ -39,9 +39,12 @@ export class CostsService {
   }
 
   async remove(id_kosztu: number, user: any) {
-    const currentTicket = await this.findOne(id_kosztu);
-    if(currentTicket && user.role == Role.User && currentTicket.id_user != user.id)
+    const currentCost = await this.findOne(id_kosztu);
+    if(!currentCost) {
+      throw new NotFoundException(`Cost record with id ${id_kosztu} not found`);
+    }
+    if(user.role == Role.User && currentCost.id_user != user.id)
       throw new ForbiddenException('Forbidden resource');
-    this.costRepo.delete({ id_kosztu });
+    return this.costRepo.delete({ id_kosztu });
   }
 }
