@@ -9,7 +9,8 @@ import {
     UseGuards,
     Request,
     ForbiddenException,
-    NotFoundException
+    NotFoundException,
+    ParseIntPipe
 } from '@nestjs/common';
 import { VehicleService } from './vehicle.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
@@ -45,17 +46,12 @@ import { Roles } from 'src/auth/role/role.decorator';
 export class VehicleController {
     constructor(private readonly vehicleService: VehicleService) {}
 
-    @ApiOperation({ summary: 'Create vehicle, required Admin role' })
-    @ApiCreatedResponse({
-        description: 'Vehicle was created, vehicle object as response', type: Vehicle
-    })
+    @ApiOperation({ summary: 'Create vehicle, Admin role required' })
+    @ApiCreatedResponse({ description: 'Vehicle was created, vehicle object as response', type: Vehicle })
     @ApiBadRequestResponse({
-        description:
-            'Incorrect fields in request body, error object (fields: message, error, statusCode) as response',
-    })
+        description: 'Incorrect fields in request body, error object (fields: message, error, statusCode) as response' })
     @ApiUnprocessableEntityResponse({
-        description:
-            'Integrity error from database, violation of eighter duplicate or foreign key constraint, error object as response',
+        description: 'Integrity error from database, violation of eighter duplicate or foreign key constraint, error object as response',
     })
     @Roles(Role.Admin)
     @Post()
@@ -63,10 +59,8 @@ export class VehicleController {
         return this.vehicleService.create(createVehicleDto);
     }
 
-    @ApiOperation({ summary: 'Get all vehicles, required Manager role' })
-    @ApiOkResponse({
-      description: 'List of vehicles as response', type: [Vehicle]
-    })
+    @ApiOperation({ summary: 'Get all vehicles' })
+    @ApiOkResponse({ description: 'List of vehicles as response', type: [Vehicle] })
     // @Roles(Role.Manager)
     @Get()
     findAll(@Request() req) {
@@ -80,21 +74,23 @@ export class VehicleController {
     @ApiOkResponse({ description: 'Vehicle object or empty object as response', type: Vehicle })
     @ApiForbiddenResponse({ description: 'User does not have access to vehicle' })
     @Get(':id')
-    async findOne(@Request() req, @Param('id') id: string) {
+    async findOne(@Request() req, @Param('id', ParseIntPipe) id: string) {
         const vehicle = await this.vehicleService.findOne(+id);
-        if(vehicle && req.user.role === Role.User && vehicle.id_user != req.user.id) 
+        if(!vehicle)
+            throw new NotFoundException('Vehicle not found');
+        if(req.user.role === Role.User && vehicle.id_user != req.user.id) 
             throw new ForbiddenException('Forbidden resource');
         return vehicle;
     }
 
 
-    @ApiOperation({ summary: 'Get vehicle by id' })
+    @ApiOperation({ summary: 'Get vehicle by id. Manager route required' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
     @ApiOkResponse({ description: 'list mileage records of the vehicle', type: [Mileage] })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @Roles(Role.Manager)
     @Get(':id/mileage')
-    async getMileage(@Param('id') id: string) {
+    async getMileage(@Param('id', ParseIntPipe) id: string) {
         return this.vehicleService.getMileageList(+id);
     }
 
@@ -104,20 +100,20 @@ export class VehicleController {
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @ApiForbiddenResponse({ description: 'User does not have access to vehicle' })
     @Get(':id/mileage/latest')
-    async getLatestMileage(@Request() req, @Param('id') id: string) {
+    async getLatestMileage(@Request() req, @Param('id', ParseIntPipe) id: string) {
         const vehicleModifyAccess = await this.vehicleService.checkIfUserCanAccessVehicle(+id, req.user);
         if(!vehicleModifyAccess) 
             throw new ForbiddenException('Forbidden resource');
         return this.vehicleService.getLatestMileage(+id);
     }
 
-    @ApiOperation({ summary: 'Create mileage record for the vehicle' })
+    @ApiOperation({ summary: 'Create mileage record for the vehicle'})
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
     @ApiOkResponse({ description: 'mileage record created successfully, mileage object as response', type: Mileage })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @ApiForbiddenResponse({ description: 'User does not have access to vehicle' })
     @Post(':id/mileage')
-    async addMileage(@Request() req, @Param('id') id: string, @Body() mileage: CreateMileageDto) {
+    async addMileage(@Request() req, @Param('id', ParseIntPipe) id: string, @Body() mileage: CreateMileageDto) {
         const vehicleModifyAccess = await this.vehicleService.checkIfUserCanAccessVehicle(+id, req.user);
         if(!vehicleModifyAccess) 
             throw new ForbiddenException('Forbidden resource');
@@ -125,12 +121,12 @@ export class VehicleController {
     }
 
 
-    @ApiOperation({ summary: 'Delete mileage record of the vehicle' })
+    @ApiOperation({ summary: 'Delete mileage record of the vehicle. Manager route required' })
     @ApiParam({ name: 'mileageid', example: 1, description: 'id of mileage record' })
     @ApiOkResponse({ description: 'mileage record deleted successfully, DeleteResult object as response', type: DeleteResult })
     @Delete('mileage/:mileageid')
     @Roles(Role.Manager)
-    deleteMileage(@Param('mileageid') mileageid: string) {
+    deleteMileage(@Param('mileageid', ParseIntPipe) mileageid: string) {
         return this.vehicleService.deleteMileage(+mileageid);
     }
 
@@ -141,7 +137,7 @@ export class VehicleController {
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @ApiForbiddenResponse({ description: 'User does not have access to vehicle' })
     @Get(':id/refuel')
-    async getRefuel(@Request() req, @Param('id') id: string) {
+    async getRefuel(@Request() req, @Param('id', ParseIntPipe) id: string) {
         const vehicleModifyAccess = await this.vehicleService.checkIfUserCanAccessVehicle(+id, req.user);
         if(!vehicleModifyAccess) 
             throw new ForbiddenException('Forbidden resource');
@@ -154,33 +150,33 @@ export class VehicleController {
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @Get(':id/events')
     @Roles(Role.Manager)
-    getEvents(@Param('id') id: string) {
+    getEvents(@Param('id', ParseIntPipe) id: string) {
         return this.vehicleService.getEvents(+id);
     }
 
-    @ApiOperation({ summary: 'Create refuel record for the vehicle' })
+    @ApiOperation({ summary: 'Create refuel record for the vehicle. Admin role required' })
     @ApiOkResponse({ description: 'vehicle updated successfully, user object as response', type: Vehicle })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @Patch(':id')
     @Roles(Role.Admin)
     update(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: string,
         @Body() updateVehicleDto: UpdateVehicleDto,
     ) {
         return this.vehicleService.update(+id, updateVehicleDto);
     }
     
 
-    @ApiOperation({ summary: 'Delete vehicle by id' })
+    @ApiOperation({ summary: 'Delete vehicle by id, Admin role required' })
     @ApiOkResponse({ description: 'Object contaning field "affected", which is number of removed records' })
     @Delete(':id')
     @Roles(Role.Admin)
-    remove(@Param('id') id: string) {
+    remove(@Param('id', ParseIntPipe) id: string) {
         return this.vehicleService.remove(+id);
     }
 
 
-    @ApiOperation({ summary: 'Assign vehicle to user' })
+    @ApiOperation({ summary: 'Assign vehicle to user. Manager role required' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
     @ApiParam({ name: 'userid', example: 1, description: 'id of user' })
     @ApiOkResponse({ description: 'vehicle updated successfully, vehicle object as response', type: Vehicle })
@@ -188,18 +184,18 @@ export class VehicleController {
     @ApiBadRequestResponse({ description: 'user does not have driving permission to given vehicle' })
     @Roles(Role.Manager)
     @Patch(':id/assign/:userid')
-    assignVehicle(@Param('id') id: string, @Param('userid') userid: string) {
+    assignVehicle(@Param('id', ParseIntPipe) id: string, @Param('userid', ParseIntPipe) userid: string) {
         return this.vehicleService.assingUserToVehicle(+id, +userid);
     }
 
 
-    @ApiOperation({ summary: 'Unassign vehicle from user' })
+    @ApiOperation({ summary: 'Unassign vehicle from user. Manager role required' })
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle that will have owner removed' })
     @ApiOkResponse({ description: 'vehicle owner unassigned (set to null), vehicle object as response', type: Vehicle })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @Roles(Role.Manager)
     @Delete(':id/assign')
-    unassignVehicle(@Param('id') id: string) {
+    unassignVehicle(@Param('id', ParseIntPipe) id: string) {
         return this.vehicleService.unassingUserFromVehicle(+id);
     }
 }
