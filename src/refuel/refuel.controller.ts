@@ -9,7 +9,8 @@ import {
     Req,
     Delete,
     UseGuards,
-    NotFoundException
+    NotFoundException,
+    ParseIntPipe
 } from '@nestjs/common';
 import { RefuelService } from './refuel.service';
 import { VehicleService } from 'src/vehicle/vehicle.service';
@@ -32,7 +33,6 @@ import { DeleteResult } from 'typeorm';
 import { Role } from 'src/auth/role/role.enum';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/role/role.decorator';
-import { NotFoundError } from 'rxjs';
 
 @ApiTags('refuel')
 @ApiHeader({ name: 'Authorization', description: 'JWT access token' })
@@ -51,7 +51,7 @@ export class RefuelController {
     @ApiBadRequestResponse({ description: 'Incorrect fields in request body, error object as response' })
     @ApiParam({ name: 'vehicleid', example: 1, required: false, description: 'id of vehicle that will have refuel' })
     @Post(':vehicleid')
-    async create(@Req() req, @Body() createRefuelDto: CreateRefuelDto, @Param('vehicleid') vehicleId: string) {
+    async create(@Req() req, @Body() createRefuelDto: CreateRefuelDto, @Param('vehicleid', ParseIntPipe) vehicleId: string) {
         const canUserModifyVehicle = await this.vehicleService.checkIfUserCanAccessVehicle(+vehicleId, req.user);
         if(canUserModifyVehicle)
             return this.refuelService.create(+vehicleId, createRefuelDto);
@@ -69,7 +69,7 @@ export class RefuelController {
     @ApiOperation({ summary: 'Get refuel record by id' })
     @ApiOkResponse({ description: 'Refuel object as response', type: Refuel})
     @Get(':id')
-    async findOne(@Req() req, @Param('id') id: string) {
+    async findOne(@Req() req, @Param('id', ParseIntPipe) id: string) {
         const refuel = await this.refuelService.findOne(+id);
         if(!refuel)
             throw new NotFoundException("Refuel record with given id does not exist");
@@ -83,7 +83,7 @@ export class RefuelController {
     @ApiOkResponse({ description: 'Refuel record successfully updated, refuel object as response', type: Refuel})
     @ApiNotFoundResponse({ description: 'Refuel record with given id does not exist' })
     @Patch(':id')
-    async update(@Req() req, @Param('id') id: string, @Body() updateRefuelDto: UpdateRefuelDto) {
+    async update(@Req() req, @Param('id', ParseIntPipe) id: string, @Body() updateRefuelDto: UpdateRefuelDto) {
         const refuel = await this.refuelService.findOne(+id);
         if(!refuel)
             throw new NotFoundException("Refuel record with given id does not exist");
@@ -96,7 +96,7 @@ export class RefuelController {
     @ApiOperation({ summary: 'Delete refuel record' })
     @ApiOkResponse({ description: 'DeleteResult object as response', type: DeleteResult })
     @Delete(':id')
-    async remove(@Req() req, @Param('id') id: string) {
+    async remove(@Req() req, @Param('id', ParseIntPipe) id: string) {
         const refuel = await this.refuelService.findOne(+id);
         if(!refuel)
             throw new NotFoundException("Refuel record with given id does not exist");

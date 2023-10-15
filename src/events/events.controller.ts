@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -35,7 +35,7 @@ export class EventsController {
   @ApiBadRequestResponse({ description: 'Incorrect fields in request body' })
   @ApiParam({ name: 'vehicleid', example: 1, description: 'id of vehicle that will have event' })
   @Post(':vehicleid')
-  create(@Param('vehicleid') id: string, @Body() createEventDto: CreateEventDto) {
+  create(@Param('vehicleid', ParseIntPipe) id: string, @Body() createEventDto: CreateEventDto) {
     return this.eventsService.create(+id, createEventDto);
   }
 
@@ -49,7 +49,7 @@ export class EventsController {
   @ApiOperation({ summary: 'Get event record by id' })
   @ApiOkResponse({ description: 'Event record as response', type: Event })
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.eventsService.findOne(+id);
   }
 
@@ -57,14 +57,14 @@ export class EventsController {
   @ApiOkResponse({ description: 'Event record as response', type: Event })
   @ApiNotFoundResponse({ description: 'Event record with given id does not exist' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
+  update(@Param('id', ParseIntPipe) id: string, @Body() updateEventDto: UpdateEventDto) {
     return this.eventsService.update(+id, updateEventDto);
   }
 
   @ApiOperation({ summary: 'Delete event record by id' })
   @ApiOkResponse({ description: 'Event record as response', type: DeleteResult })
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     return this.eventsService.remove(+id);
   }
 }
