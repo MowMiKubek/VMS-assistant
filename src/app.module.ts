@@ -15,7 +15,7 @@ import databaseConfig from '../database/database.config';
 @Module({
     imports: [
         ConfigModule.forRoot({
-            envFilePath: 'development.env',
+            envFilePath: `${process.env.NODE_ENV === 'production' ? '.env' : 'development.env'}`,
             isGlobal: true,
         }),
         TypeOrmModule.forRoot(databaseConfig()),

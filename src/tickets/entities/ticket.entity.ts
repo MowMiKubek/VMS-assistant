@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { User } from "../..//user/entities/user.entity";
+import { User } from "../../user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'mandaty' })
@@ -20,7 +20,7 @@ export class Ticket {
     waznosc: number;
     
     @ApiProperty({ example: '2023-08-10T15:00.00Z' })
-    @Column({ type: 'datetime' })
+    @Column({ type: 'timestamp' })
     data_wystawienia: Date;
     
     @ApiProperty({ example: 80000 })
