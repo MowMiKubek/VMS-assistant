@@ -6,6 +6,7 @@ import { Exclude } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { Permission } from "./permissions.entity";
 import { Cost } from "src/costs/entities/cost.entity";
+import { UserStatus } from "../enums/status.enum";
 
 @Entity({name: 'users'})
 export class User {
@@ -36,6 +37,9 @@ export class User {
     @ApiProperty({ example: Role.User, default: Role.User })
     @Column({ type: 'enum', enum: Role, default: Role.User })
     rola: Role;
+
+    @Column({ type: 'enum', enum: UserStatus, default: UserStatus.Active })
+    status: UserStatus;
 
     @OneToMany(() => Vehicle, vehicle => vehicle.user)
     pojazdy: Promise<Vehicle[]>

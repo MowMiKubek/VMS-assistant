@@ -2,12 +2,16 @@ import { DataSource } from "typeorm";
 
 
 import { config } from "dotenv";
-config({ path: `${process.cwd()}/development.env` });
+const ENV = process.env.NODE_ENV || 'development';
 
-console.log(process.env.DB_HOST)
+if(ENV === 'production')
+    config({ path: `${process.cwd()}/.env` });
+else
+    config({ path: `${process.cwd()}/.development.env` });
+
 
 export default new DataSource({
-    type: 'mysql',
+    type: `${ENV === 'production' ? 'postgres' : 'mysql'}`,
     host: process.env.DB_HOST,
     port: +process.env.DB_PORT,
     username: process.env.DB_USERNAME,
@@ -15,5 +19,5 @@ export default new DataSource({
     database: process.env.DB_NAME,
     synchronize: false,
     entities: [`${process.cwd()}/src/**/*.entity.ts`],
-    migrations: [`${process.cwd()}/database/migrations/**/*.ts`],
+    migrations: [`${process.cwd()}/database/migrations${process.env.NODE_ENV === 'production' ? '/postgres' : ''}/**/*.ts`],
 })

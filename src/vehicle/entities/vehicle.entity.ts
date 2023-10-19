@@ -26,11 +26,11 @@ export class Vehicle {
     rocznik: number;
     
     @ApiProperty({ example: '1G1AF1F57A7192174', required: false })
-    @Column({ nullable: true })
+    @Column({ nullable: true, unique: true })
     VIN: string;
 
     @ApiProperty({ example: 'DW 9PS69', required: false })
-    @Column({ nullable: true })
+    @Column({ nullable: true, unique: true })
     nr_rejestracyjny: string;
 
     @ApiProperty({ example: '2023-08-10T15:00.00Z', required: false })

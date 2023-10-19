@@ -15,6 +15,7 @@ import { User } from 'src/user/entities/user.entity';
 import { Mileage } from './entities/mileage.entity';
 import { History } from './entities/history.entity';
 import { Event } from 'src/events/entities/event.entity';
+import { Role } from 'src/auth/role/role.enum';
 
 @Injectable()
 export class VehicleService {
@@ -32,6 +33,10 @@ export class VehicleService {
 
     findAll(): Promise<Vehicle[]> {
         return this.vehicleRepo.find({});
+    }
+
+    findAllByUser(id_user: number): Promise<Vehicle[]> {
+        return this.vehicleRepo.findBy({ id_user });
     }
 
     findOne(id: number): Promise<Vehicle> {
@@ -174,5 +179,20 @@ export class VehicleService {
         // unassign vehicle from user
         vehicle.id_user = null;
         return this.vehicleRepo.save(vehicle);
+    }
+
+    /**
+     * 
+     * @param id_vehicle 
+     * @param user 
+     * @returns false if user have role User and does not have access to vehicle, true otherwise
+     * throws NotFoundException if vehicle does not exist
+     */
+    async checkIfUserCanAccessVehicle(id_vehicle: number, user: any): Promise<boolean> {
+        const vehicle = await this.findOne(id_vehicle);
+        if (!vehicle) {
+            throw new NotFoundException('vehicle not found');
+        }
+        return user.role != Role.User || (user.role == Role.User && vehicle.id_user === user.id);
     }
 }

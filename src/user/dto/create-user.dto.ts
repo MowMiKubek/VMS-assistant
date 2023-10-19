@@ -1,6 +1,7 @@
 import { IsString, IsEmail, IsEnum, IsOptional } from "class-validator";
 import { Role } from "../../auth/role/role.enum";
 import { ApiProperty } from "@nestjs/swagger";
+import { UserStatus } from "../enums/status.enum";
 
 export class CreateUserDto {
     @ApiProperty({
@@ -46,4 +47,14 @@ export class CreateUserDto {
     @IsOptional()
     @IsEnum(Role)
     rola: Role;
+
+    @ApiProperty({
+        type: 'enum',
+        enum: UserStatus,
+        description: 'user status',
+        default: UserStatus.Active
+    })
+    @IsOptional()
+    @IsEnum(UserStatus)
+    status: UserStatus;
 }

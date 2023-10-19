@@ -28,7 +28,7 @@ export class CreateEventDto {
     @IsIn([0, 1])
     czy_okresowe: number;
 
-    @ApiProperty({ example: 12 })
+    @ApiProperty({ description: 'Period of event (if `czy_przypomniec` set to 1). In months', example: 12 })
     @IsOptional()
     @IsInt()
     @IsPositive()

@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ticket } from './entities/ticket.entity';
 import { DeleteResult, Repository } from 'typeorm';
+import { Role } from 'src/auth/role/role.enum';
 
 @Injectable()
 export class TicketsService {
@@ -20,20 +21,32 @@ export class TicketsService {
     return this.ticketRepo.find({});
   }
 
+  findByUserId(id_user: number): Promise<Ticket[]> {
+    return this.ticketRepo.findBy({ id_user });
+  }
+
   findOne(id_mandatu: number): Promise<Ticket> {
     return this.ticketRepo.findOneBy({ id_mandatu })
   }
 
-  async update(id: number, updateTicketDto: UpdateTicketDto): Promise<Ticket> {
+  async update(id: number, updateTicketDto: UpdateTicketDto, user: any): Promise<Ticket> {
     const currentTicket = await this.findOne(id);
     if(!currentTicket) {
       throw new NotFoundException(`ticket with id ${id} not found`);
     }
+    if(user.role == Role.User && currentTicket.id_user != user.id) 
+      throw new ForbiddenException('Forbidden resource');
     Object.assign(currentTicket, updateTicketDto);
-    return currentTicket;
+    return this.ticketRepo.save(currentTicket);
   }
 
-  remove(id_mandatu: number): Promise<DeleteResult> {
+  async remove(id_mandatu: number, user: any): Promise<DeleteResult> {
+    const currentTicket = await this.findOne(id_mandatu);
+    if(!currentTicket) {
+      throw new NotFoundException(`ticket with ${id_mandatu} not found`);
+    }
+    if(user.role == Role.User && currentTicket.id_user != user.id) 
+      throw new ForbiddenException('Forbidden resource');
     return this.ticketRepo.delete({ id_mandatu })
   }
 }

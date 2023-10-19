@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsEnum, IsPositive, IsInt, Min, Max, IsOptional } from "class-validator";
+import { IsNumber, IsEnum, IsPositive, IsInt, Min, Max, IsOptional, IsIn } from "class-validator";
 import { FuelType } from "../../vehicle/fueltype.enum";
 
 export class CreateRefuelDto {
@@ -7,7 +7,7 @@ export class CreateRefuelDto {
     @IsNumber()
     ilosc_paliwa: number;
 
-    @ApiProperty({ example: FuelType.Benzyna })
+    @ApiProperty({ example: FuelType.Benzyna, type: 'enum', enum: FuelType })
     @IsEnum(FuelType)
     typ_paliwa: FuelType;
 
@@ -24,7 +24,6 @@ export class CreateRefuelDto {
     @ApiProperty({ example: 0, required: false })
     @IsOptional()
     @IsNumber()
-    @Min(0)
-    @Max(1)
+    @IsIn([0, 1])
     blokada: number;
 }

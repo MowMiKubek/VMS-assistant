@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { CreateCostDto } from './dto/create-cost.dto';
 import { UpdateCostDto } from './dto/update-cost.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cost } from './entities/cost.entity';
 import { Repository } from 'typeorm';
+import { Role } from 'src/auth/role/role.enum';
 
 @Injectable()
 export class CostsService {
@@ -18,15 +19,32 @@ export class CostsService {
     return this.costRepo.find({});
   }
 
+  findByUserId(id_user: number) {
+    return this.costRepo.findBy({ id_user });
+  }
+
   findOne(id_kosztu: number) {
     return this.costRepo.findOneBy({ id_kosztu });
   }
 
-  update(id_kosztu: number, updateCostDto: UpdateCostDto) {
-    return this.costRepo.update({ id_kosztu }, updateCostDto);
+  async update(id_kosztu: number, updateCostDto: UpdateCostDto, user: any): Promise<Cost> {
+    const currentCost = await this.costRepo.findOneBy({ id_kosztu });
+    if(!currentCost) {
+      throw new NotFoundException(`Cost record with id ${id_kosztu} not found`);
+    }
+    if(user.role == Role.User && currentCost.id_user != user.id)
+      throw new ForbiddenException('Forbidden resource');
+    Object.assign(currentCost, updateCostDto);
+    return this.costRepo.save(currentCost);
   }
 
-  remove(id_kosztu: number) {
-    this.costRepo.delete({ id_kosztu });
+  async remove(id_kosztu: number, user: any) {
+    const currentCost = await this.findOne(id_kosztu);
+    if(!currentCost) {
+      throw new NotFoundException(`Cost record with id ${id_kosztu} not found`);
+    }
+    if(user.role == Role.User && currentCost.id_user != user.id)
+      throw new ForbiddenException('Forbidden resource');
+    return this.costRepo.delete({ id_kosztu });
   }
 }

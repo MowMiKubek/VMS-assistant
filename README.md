@@ -20,8 +20,9 @@ At this point it is also required to have running sql server with project databa
 ```bash
 $ npm install
 ```
-
-Aside from installing npm modules, the `development.env` file must be added in the root directory. It should look like example below.
+In addition to installing the npm modules, the `.env` file must be added to the root directory. For the development environment, the `development.env` file is read, and for the production environment, the `.env` file is read.
+Application has two environments: development and production. By default, development environment is used. NPM scripts are set up to correct environment, but it can be modified in `package.json` file.
+ It should look like example below.
 
 ```bash
 PORT=3000
@@ -39,13 +40,18 @@ JWT_SECRET=secret
 ## Running the app
 
 ```bash
+# develpmment commands
 # development
 $ npm run start
 
 # watch mode
 $ npm run start:dev
 
-# production mode
+# production commands
+# deploy
+$ npm run deploy
+
+# start in production
 $ npm run start:prod
 ```
 
@@ -64,7 +70,7 @@ $ npm run test:cov
 
 ### Database migrations
 
-For initializing project database you should just run latest migration (`migration:run` command)
+For initializing project database you should just run latest migration (`migration:run` command). Every migration command runs in development environment by default. You can add suffix `:prod` to run it in production environment.
 
 ```bash
 # generate migration
