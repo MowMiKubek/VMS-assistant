@@ -15,7 +15,6 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 import {
     ApiBadRequestResponse,
     ApiBearerAuth,
@@ -40,7 +39,6 @@ import { Role } from 'src/auth/role/role.enum';
 @ApiBearerAuth()
 @ApiHeader({ name: 'Authorization', description: 'JWT auth token' })
 @UseGuards(RolesGuard)
-@UseInterceptors(SerializeInterceptor)
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService) {}

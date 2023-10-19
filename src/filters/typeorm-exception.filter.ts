@@ -8,17 +8,36 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
         const response = host.switchToHttp().getResponse<Response>();
         // console.log(exception.message);
         const message = exception.driverError.message;
-        console.log(message);
         switch (exception.driverError.code) {
-            case 'ER_NO_REFERENCED_ROW_2': {
+            // MYSQL
+            case 'ER_NO_REFERENCED_ROW_2': { // 23503
                 response.status(422).json({
                     statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                     message: 'Foreign key constraint violation.',
                 });
                 break;
             }
-            case 'ER_DUP_ENTRY': {
+            case 'ER_DUP_ENTRY': {  // 25055
                 const fieldRegex = /key '(.+?)'/;
+                const fieldMatch = message.match(fieldRegex);
+                const field = fieldMatch ? fieldMatch[1] : null;
+                response.status(422).json({
+                    statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                    message: 'Duplicate key constraint violation.',
+                    field,
+                });
+                break;
+            }
+            // POSTGRES
+            case '23503': { // foreign key constraint violation
+                response.status(422).json({
+                    statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                    message: 'Foreign key constraint violation.',
+                });
+                break;
+            }
+            case '23505': { // unique constraint violation
+                const fieldRegex = /"([^"]+)"/;
                 const fieldMatch = message.match(fieldRegex);
                 const field = fieldMatch ? fieldMatch[1] : null;
                 response.status(422).json({

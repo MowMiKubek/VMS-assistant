@@ -16,7 +16,7 @@ export class Event {
     opis: string;
     
     @ApiProperty({ example: '2023-08-10T15:00.00Z' })
-    @Column({ type: 'datetime' })
+    @Column({ type: 'timestamp' })
     data: Date;
     
     @ApiProperty({ example: 10000 })
@@ -24,11 +24,11 @@ export class Event {
     koszt: number;
     
     @ApiProperty({ example: 1 })
-    @Column({ type: 'tinyint', default: 0 })
+    @Column({ type: 'smallint', default: 0 })
     czy_przypomniec: number;
     
     @ApiProperty({ example: 1 })
-    @Column({ type: 'tinyint', default: 0 })
+    @Column({ type: 'smallint', default: 0 })
     czy_okresowe: number;
     
     @ApiProperty({ example: 12 })

@@ -5,10 +5,10 @@ export class History {
     @PrimaryGeneratedColumn()
     id_wpis: number;
 
-    @Column({type: 'datetime'})
+    @Column({type: 'timestamp'})
     poczatek: Date;
 
-    @Column({type: 'datetime', nullable: true})
+    @Column({type: 'timestamp', nullable: true})
     koniec: Date;
 
     @Column({type: 'int'})
