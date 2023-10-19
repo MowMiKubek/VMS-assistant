@@ -20,6 +20,10 @@ export class RefuelService {
     return this.refuelRepo.find({});
   }
 
+  findByVehicleId(id_pojazdu: number): Promise<Refuel[]> {
+    return this.refuelRepo.findBy({ id_pojazdu });
+  }
+
   findOne(id_tankowania: number): Promise<Refuel> {
     return this.refuelRepo.findOneBy({ id_tankowania })
   }
