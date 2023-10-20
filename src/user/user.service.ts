@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -6,6 +6,7 @@ import { DeleteResult, FindManyOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreatePermissionDto } from './dto/create-permission.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UserService {
@@ -41,10 +42,29 @@ export class UserService {
         let hash = currentUser.haslo;
         if(updateUserDto.haslo) {
             const salt = await bcrypt.genSalt(10);
-            const hash = await bcrypt.hash(updateUserDto.haslo, salt);
+            hash = await bcrypt.hash(updateUserDto.haslo, salt);
         }
         Object.assign(currentUser, {...updateUserDto, haslo: hash});
         console.log(currentUser);
+        return this.userRepo.save(currentUser);
+    }
+
+
+    async updatePassword(id_user: number, updatePasswordDto: UpdatePasswordDto) {
+        const currentUser = await this.findOne(id_user);
+        if(!currentUser) {
+            throw new NotFoundException("user not found");
+        }
+        if(updatePasswordDto.haslo !== updatePasswordDto.potwierdz_haslo) {
+            throw new BadRequestException({
+                message: ["passwords do not match"],
+                error: "Bad Request",
+                statusCode: 400
+            })
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(updatePasswordDto.haslo, salt);
+        currentUser.haslo = hash;
         return this.userRepo.save(currentUser);
     }
 
@@ -84,7 +104,6 @@ export class UserService {
     }
 
     async addPermission(id_user: number, permission: CreatePermissionDto) {
-        // insert many raeords at once
         const user = await this.findOne(id_user);
         if (!user) {
             throw new NotFoundException(

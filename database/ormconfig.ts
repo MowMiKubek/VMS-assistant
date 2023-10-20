@@ -7,7 +7,7 @@ const ENV = process.env.NODE_ENV || 'development';
 if(ENV === 'production')
     config({ path: `${process.cwd()}/.env` });
 else
-    config({ path: `${process.cwd()}/.development.env` });
+    config({ path: `${process.cwd()}/development.env` });
 
 
 export default new DataSource({
@@ -19,5 +19,5 @@ export default new DataSource({
     database: process.env.DB_NAME,
     synchronize: false,
     entities: [`${process.cwd()}/src/**/*.entity.ts`],
-    migrations: [`${process.cwd()}/database/migrations${process.env.NODE_ENV === 'production' ? '/postgres' : ''}/**/*.ts`],
+    migrations: [`${process.cwd()}/database/migrations${process.env.NODE_ENV === 'production' ? '/postgres' : '/mysql'}/**/*.ts`],
 })
