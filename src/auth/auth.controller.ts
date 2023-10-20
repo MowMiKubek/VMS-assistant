@@ -31,6 +31,7 @@ import { Roles } from './role/role.decorator';
 import { RolesGuard } from './guards/role.guard';
 import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
 import { CreatePermissionDto } from 'src/user/dto/create-permission.dto';
+import { UpdatePasswordDto } from 'src/user/dto/update-password.dto';
 
 class LoginResponse {
     @ApiProperty({
@@ -75,6 +76,16 @@ export class AuthController {
         console.log(updateUserDto);
         return this.userService.update(req.user.id, updateUserDto);
     }
+
+    @ApiOperation({ summary: 'Update current user password' })
+    @ApiBearerAuth()
+    @UseGuards(RolesGuard)
+    @Patch('profile/password')
+    async passwordUpdate(@Request() req, @Body() updateUserDto: UpdatePasswordDto) {
+        console.log(updateUserDto);
+        return this.userService.updatePassword(req.user.id, updateUserDto);
+    }
+
 
     @ApiOperation({ summary: 'Current user vehicles' })
     @ApiBearerAuth()
