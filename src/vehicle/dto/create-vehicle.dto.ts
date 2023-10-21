@@ -1,4 +1,4 @@
-import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
+import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { FuelType } from "../fueltype.enum";
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
@@ -34,7 +34,9 @@ export class CreateVehicleDto {
     })
     @IsOptional()
     @IsString()
+    @MinLength(3)
     @MaxLength(17)
+    @Transform(({ value }) => value.trim().toUpperCase())
     VIN: string;
     
     @ApiProperty({
@@ -44,6 +46,8 @@ export class CreateVehicleDto {
     })
     @IsOptional()
     @IsString()
+    @MinLength(3)
+    @Transform(({ value }) => value.trim().toUpperCase().split(' ').join(''))
     nr_rejestracyjny: string;
     
     @ApiProperty({
