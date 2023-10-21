@@ -4,7 +4,7 @@ import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ticket } from './entities/ticket.entity';
 import { DeleteResult, Repository } from 'typeorm';
-import { Role } from 'src/auth/role/role.enum';
+import { Role } from '../auth/role/role.enum';
 
 @Injectable()
 export class TicketsService {

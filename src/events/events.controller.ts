@@ -14,11 +14,11 @@ import {
   ApiHeader,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { RolesGuard } from 'src/auth/guards/role.guard';
+import { RolesGuard } from '../auth/guards/role.guard';
 import { Event } from './entities/event.entity';
 import { DeleteResult } from 'typeorm';
-import { Roles } from 'src/auth/role/role.decorator';
-import { Role } from 'src/auth/role/role.enum';
+import { Roles } from '../auth/role/role.decorator';
+import { Role } from '../auth/role/role.enum';
 
 @ApiTags('events')
 @ApiHeader({ name: 'Authorization', description: 'JWT access token' })

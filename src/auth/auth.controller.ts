@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
-import { UserService } from 'src/user/user.service';
-import { UpdateUserRegularDto } from 'src/user/dto/update-user-regular.dto';
+import { UserService } from '../user/user.service';
+import { UpdateUserRegularDto } from '../user/dto/update-user-regular.dto';
 import {
     ApiBadRequestResponse,
     ApiBearerAuth,
@@ -29,9 +29,9 @@ import {
 import { Role } from './role/role.enum';
 import { Roles } from './role/role.decorator';
 import { RolesGuard } from './guards/role.guard';
-import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
-import { CreatePermissionDto } from 'src/user/dto/create-permission.dto';
-import { UpdatePasswordDto } from 'src/user/dto/update-password.dto';
+import { Vehicle } from '../vehicle/entities/vehicle.entity';
+import { CreatePermissionDto } from '../user/dto/create-permission.dto';
+import { UpdatePasswordDto } from '../user/dto/update-password.dto';
 
 class LoginResponse {
     @ApiProperty({

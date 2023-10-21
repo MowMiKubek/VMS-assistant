@@ -13,7 +13,7 @@ import {
     ParseIntPipe
 } from '@nestjs/common';
 import { RefuelService } from './refuel.service';
-import { VehicleService } from 'src/vehicle/vehicle.service';
+import { VehicleService } from '../vehicle/vehicle.service';
 import { CreateRefuelDto } from './dto/create-refuel.dto';
 import { UpdateRefuelDto } from './dto/update-refuel.dto';
 import {
@@ -30,9 +30,9 @@ import {
 } from '@nestjs/swagger';
 import { Refuel } from './entities/refuel.entity';
 import { DeleteResult } from 'typeorm';
-import { Role } from 'src/auth/role/role.enum';
-import { RolesGuard } from 'src/auth/guards/role.guard';
-import { Roles } from 'src/auth/role/role.decorator';
+import { Role } from '../auth/role/role.enum';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { Roles } from '../auth/role/role.decorator';
 
 @ApiTags('refuel')
 @ApiHeader({ name: 'Authorization', description: 'JWT access token' })

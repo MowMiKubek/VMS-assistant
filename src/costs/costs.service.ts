@@ -4,7 +4,7 @@ import { UpdateCostDto } from './dto/update-cost.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cost } from './entities/cost.entity';
 import { Repository } from 'typeorm';
-import { Role } from 'src/auth/role/role.enum';
+import { Role } from '../auth/role/role.enum';
 
 @Injectable()
 export class CostsService {

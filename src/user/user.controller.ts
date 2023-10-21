@@ -6,12 +6,11 @@ import {
     Patch,
     Param,
     Delete,
-    UseInterceptors,
     ParseIntPipe,
     Req,
     UseGuards,
 } from '@nestjs/common';
-import { RolesGuard } from 'src/auth/guards/role.guard';
+import { RolesGuard } from '../auth/guards/role.guard';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -31,9 +30,9 @@ import { User } from './entities/user.entity';
 import { Vehicle } from '../vehicle/entities/vehicle.entity';
 import { Ticket } from '../tickets/entities/ticket.entity';
 import { CreatePermissionDto } from './dto/create-permission.dto';
-import { Cost } from 'src/costs/entities/cost.entity';
-import { Roles } from 'src/auth/role/role.decorator';
-import { Role } from 'src/auth/role/role.enum';
+import { Cost } from '../costs/entities/cost.entity';
+import { Roles } from '../auth/role/role.decorator';
+import { Role } from '../auth/role/role.enum';
 
 @ApiTags('user')
 @ApiBearerAuth()

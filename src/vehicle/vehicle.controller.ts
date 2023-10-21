@@ -28,15 +28,15 @@ import {
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { RolesGuard } from 'src/auth/guards/role.guard';
-import { Role } from 'src/auth/role/role.enum';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { Role } from '../auth/role/role.enum';
 
 import { Vehicle } from './entities/vehicle.entity';
 import { Refuel } from '../refuel/entities/refuel.entity';
 import { Mileage } from './entities/mileage.entity';
 import { CreateMileageDto } from './dto/create-mileage.dto';
 import { DeleteResult } from 'typeorm';
-import { Roles } from 'src/auth/role/role.decorator';
+import { Roles } from '../auth/role/role.decorator';
 
 @ApiTags('vehicle')
 @ApiHeader({ name: 'Authorization', description: 'JWT access token'})

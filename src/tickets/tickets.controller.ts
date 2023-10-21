@@ -28,11 +28,11 @@ import {
     ApiTags,
     ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { RolesGuard } from 'src/auth/guards/role.guard';
+import { RolesGuard } from '../auth/guards/role.guard';
 import { Ticket } from './entities/ticket.entity';
 import { DeleteResult } from 'typeorm';
-import { Role } from 'src/auth/role/role.enum';
-import { Roles } from 'src/auth/role/role.decorator';
+import { Role } from '../auth/role/role.enum';
+import { Roles } from '../auth/role/role.decorator';
 
 @ApiTags('tickets')
 @ApiHeader({ name: 'Authorization', description: 'JWT access token' })
