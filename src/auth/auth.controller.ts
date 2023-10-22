@@ -3,7 +3,6 @@ import {
     Controller,
     Get,
     Delete,
-    NotFoundException,
     Post,
     Patch,
     Request,
@@ -11,15 +10,12 @@ import {
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
-import { UserService } from '../user/user.service';
-import { UpdateUserRegularDto } from '../user/dto/update-user-regular.dto';
+import { UserService } from 'src/user/user.service';
+import { UpdateUserRegularDto } from 'src/user/dto/update-user-regular.dto';
 import {
-    ApiBadRequestResponse,
     ApiBearerAuth,
-    ApiCreatedResponse,
     ApiForbiddenResponse,
     ApiHeader,
-    ApiNotFoundResponse,
     ApiOkResponse,
     ApiOperation,
     ApiProperty,
@@ -29,9 +25,9 @@ import {
 import { Role } from './role/role.enum';
 import { Roles } from './role/role.decorator';
 import { RolesGuard } from './guards/role.guard';
-import { Vehicle } from '../vehicle/entities/vehicle.entity';
-import { CreatePermissionDto } from '../user/dto/create-permission.dto';
-import { UpdatePasswordDto } from '../user/dto/update-password.dto';
+import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
+import { CreatePermissionDto } from 'src/user/dto/create-permission.dto';
+import { UpdatePasswordDto } from 'src/user/dto/update-password.dto';
 
 class LoginResponse {
     @ApiProperty({
@@ -88,6 +84,8 @@ export class AuthController {
 
 
     @ApiOperation({ summary: 'Current user vehicles' })
+    @ApiOkResponse({ description: 'Vehicles list as response' })
+    @ApiUnauthorizedResponse({ description: 'Invalid access_token' })
     @ApiBearerAuth()
     @UseGuards(RolesGuard)
     @Get('vehicles')
@@ -96,6 +94,8 @@ export class AuthController {
     }
 
     @ApiOperation({ summary: 'Current user costs' })
+    @ApiOkResponse({ description: 'Costs list as response' })
+    @ApiUnauthorizedResponse({ description: 'Invalid access_token' })
     @ApiBearerAuth()
     @UseGuards(RolesGuard)
     @Get('costs')
@@ -103,7 +103,19 @@ export class AuthController {
         return this.userService.getCosts(req.user.id);
     }
 
+    @ApiOperation({ summary: 'Current user tickets '})
+    @ApiOkResponse({ description: 'User tickets as response' })
+    @ApiUnauthorizedResponse({ description: 'Invalid access_token' })
+    @ApiBearerAuth()
+    @UseGuards(RolesGuard)
+    @Get('tickets')
+    async tickets(@Request() req) {
+        return this.userService.getTickets(req.user.id);
+    }
+
     @ApiOperation({ summary: 'Grant driving permission to user' })
+    @ApiOkResponse({ description: 'Driving permission granted. User object as response' })
+    @ApiUnauthorizedResponse({ description: 'Invalid access_token '})
     @ApiBearerAuth()
     @UseGuards(RolesGuard)
     @Post('permissions')
@@ -111,7 +123,9 @@ export class AuthController {
         return this.userService.addPermission(req.user.id, permission);
     }
 
-    @ApiOperation({ summary: 'Revoke driving permission from user' })
+    @ApiOperation({ summary: 'Revoke driving permission from user'  })
+    @ApiOkResponse({ description: 'Driving permission revoked. User object as response' })
+    @ApiUnauthorizedResponse({ description: 'Invalid access_token '})
     @ApiBearerAuth()
     @UseGuards(RolesGuard)
     @Delete('permissions')
