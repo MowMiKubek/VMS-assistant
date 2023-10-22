@@ -3,8 +3,9 @@ import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ticket } from './entities/ticket.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { Role } from '../auth/role/role.enum';
+import * as moment from 'moment';
 
 @Injectable()
 export class TicketsService {
@@ -17,8 +18,15 @@ export class TicketsService {
     return this.ticketRepo.save(newTicket);
   }
 
-  findAll(): Promise<Ticket[]> {
-    return this.ticketRepo.find({});
+  async findAll(all: boolean): Promise<Ticket[]> {
+    const tickets = await this.ticketRepo.find({});
+    const curretnDate = new Date();
+    if(all) 
+      return tickets;
+    return tickets
+      .filter(ticket => 
+        moment(ticket.data_wystawienia).isAfter(moment(curretnDate).subtract(ticket.waznosc, 'months'))
+      );
   }
 
   findByUserId(id_user: number): Promise<Ticket[]> {
