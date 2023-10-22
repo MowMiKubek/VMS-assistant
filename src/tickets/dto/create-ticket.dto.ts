@@ -3,25 +3,25 @@ import { IsDateString,  IsInt, IsPositive, IsString } from "class-validator";
 
 export class CreateTicketDto {
     @ApiProperty({ example: 'Przekroczenie prędkości '})
-    @IsString()
+    @IsString({ message: 'Brak nazwy' })
     nazwa: string;
 
     @ApiProperty({ example: 10 })
-    @IsInt()
-    @IsPositive()
+    @IsInt({ message: 'Liczba punktów musi być liczbą całkowitą'})
+    @IsPositive({ message: 'Liczba punktów powinna być dodatnia' })
     liczba_punktow: number;
 
     @ApiProperty({ example: 12 })
-    @IsInt()
-    @IsPositive()
+    @IsInt({ message: 'Ważność musi być liczbą całkowitą'})
+    @IsPositive({ message: 'Ważność powinna być liczbą dodatnią' })
     waznosc: number;
 
     @ApiProperty({ example: '2023-08-10T15:00.00Z'})
-    @IsDateString()
+    @IsDateString({}, { message: 'Niepoprawny format daty' })
     data_wystawienia: Date;
 
     @ApiProperty({ example: 800000 })
-    @IsInt()
-    @IsPositive()
+    @IsInt({ message: 'Niepoprawna cena'})
+    @IsPositive({ message: 'Cena powinna być dodatnia' })
     cena: number;
 }
