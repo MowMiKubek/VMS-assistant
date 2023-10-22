@@ -1,13 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString, IsInt, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsInt, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateCostDto {
     @ApiProperty({ example: 'Mycie samochodu' })
     @IsString({ message: 'Brak nazwy'})
+    @MinLength(3, { message: 'Nazwa musi mieć co najmniej $constraint1 znaki' })
+    @MaxLength(50, { message: 'Nazwa nie może mieć więcej niż $constraint1 znaków' })
     nazwa: string;
 
     @ApiProperty({ example: 'Mycie samochodu na myjni automatycznej' })
     @IsString({ message: 'Brak opisu'})
+    @MinLength(3, { message: 'Opis musi mieć co najmniej $constraint1 znaki' })
     opis: string;
 
     @ApiProperty({ example: 15000 })

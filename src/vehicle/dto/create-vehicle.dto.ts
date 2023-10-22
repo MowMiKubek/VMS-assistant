@@ -7,10 +7,12 @@ import * as moment from "moment";
 export class CreateVehicleDto {
     @ApiProperty({ description: 'car brand', example: 'volkswagen' })
     @IsString({ message: 'Brak marki pojazdu' })
+    @MaxLength(20, { message: 'Maksymalna długość pola $property wynosi $constraint1 znaków '})
     marka: string;
     
     @ApiProperty({ description: 'car model', example: 'passat' })
     @IsString({ message: 'Brak modelu pojazdu' })
+    @MaxLength(20, { message: 'Maksymalna długość pola $property wynosi $constraint1 znaków '})
     model: string;
 
     @ApiProperty({ description: 'car production year', example: '2006', type: Number })

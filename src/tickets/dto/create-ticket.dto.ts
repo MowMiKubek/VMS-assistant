@@ -1,9 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString,  IsInt, IsPositive, IsString } from "class-validator";
+import { IsDateString,  IsInt, IsPositive, IsString, MinLength, MaxLength } from "class-validator";
 
 export class CreateTicketDto {
-    @ApiProperty({ example: 'Przekroczenie prędkości '})
+    @ApiProperty({ example: 'Przekroczenie prędkości' })
     @IsString({ message: 'Brak nazwy' })
+    @MinLength(3, { message: 'Nazwa musi mieć co najmniej $constraint1 znaki' })
+    @MaxLength(50, { message: 'Nazwa nie może mieć więcej niż $constraint1 znaków' })
     nazwa: string;
 
     @ApiProperty({ example: 10 })

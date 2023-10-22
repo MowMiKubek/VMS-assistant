@@ -6,11 +6,13 @@ import { UserStatus } from "../enums/status.enum";
 export class CreateUserDto {
     @ApiProperty({ description: 'user name', example: 'Jan' })
     @MinLength(3, { message: "Imię musi mieć co najmniej $constraint1 znaki" })
+    @MaxLength(20, { message: 'Imię nie może mieć więcej niż 20 znaków' })
     @IsString()
     imie: string;
 
     @ApiProperty({ description: 'user lastname', example: 'Nowak' })
     @MinLength(3, { message: "Nazwisko musi mieć co najmniej $constraint1 znaki" })
+    @MaxLength(20, { message: 'Nazwisko nie może mieć więcej niż 20 znaków' })
     @IsString({ message: "Brak nazwiska" })
     nazwisko: string;
 
