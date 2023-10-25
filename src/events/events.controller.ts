@@ -29,7 +29,7 @@ import { Role } from '../auth/role/role.enum';
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
-  @ApiOperation({ summary: 'Create event' })
+  @ApiOperation({ summary: 'Create event. Manager role required' })
   @ApiCreatedResponse({ description: 'Event record was created', type: Event})
   @ApiUnprocessableEntityResponse({ description: 'Car with given id does not exist' })
   @ApiBadRequestResponse({ description: 'Incorrect fields in request body' })
@@ -39,21 +39,21 @@ export class EventsController {
     return this.eventsService.create(+id, createEventDto);
   }
 
-  @ApiOperation({ summary: 'Get all event records' })
+  @ApiOperation({ summary: 'Get all event records. Manager role required' })
   @ApiOkResponse({ description: 'List of event records as response', type: [Event] })
   @Get()
   findAll() {
     return this.eventsService.findAll();
   }
 
-  @ApiOperation({ summary: 'Get event record by id' })
+  @ApiOperation({ summary: 'Get event record by id. Manager role required' })
   @ApiOkResponse({ description: 'Event record as response', type: Event })
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: string) {
     return this.eventsService.findOne(+id);
   }
 
-  @ApiOperation({ summary: 'Update event record by id' })
+  @ApiOperation({ summary: 'Update event record by id. Manager role required' })
   @ApiOkResponse({ description: 'Event record as response', type: Event })
   @ApiNotFoundResponse({ description: 'Event record with given id does not exist' })
   @Patch(':id')
@@ -61,7 +61,7 @@ export class EventsController {
     return this.eventsService.update(+id, updateEventDto);
   }
 
-  @ApiOperation({ summary: 'Delete event record by id' })
+  @ApiOperation({ summary: 'Delete event record by id. Manager role required' })
   @ApiOkResponse({ description: 'Event record as response', type: DeleteResult })
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: string) {

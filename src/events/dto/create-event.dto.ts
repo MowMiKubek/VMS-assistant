@@ -5,7 +5,7 @@ export class CreateEventDto {
     @ApiProperty({ example: 'Przegląd samochodu' })
     @IsString({ message: 'Brak nazwy' })
     @MinLength(3, { message: 'Nazwa musi mieć co najmniej $constraint1 znaki' })
-    @MaxLength(50, { message: 'Nazwa nie może mieć więcej niż $constraint1 znaków' })
+    @MaxLength(20, { message: 'Nazwa nie może mieć więcej niż $constraint1 znaków' })
     nazwa: string;
 
     @ApiProperty({ example: 'Przegląd techniczny samochodu' })

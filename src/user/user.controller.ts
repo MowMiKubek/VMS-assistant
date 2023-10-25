@@ -111,6 +111,7 @@ export class UserController {
 
     // Permission section
     @ApiOperation({ summary: 'Grant driving permission to user. Admin role required' })
+    @ApiCreatedResponse({ description: 'Driving permission granted. User object as response', type: User })
     @ApiParam({ name: 'id', example: 1, description: 'id of user' })
     @Roles(Role.Admin)
     @Post(':id/permissions')

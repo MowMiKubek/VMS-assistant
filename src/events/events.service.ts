@@ -2,12 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Event } from './entities/event.entity';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class EventsService {
-  constructor(@InjectRepository(Event) private eventsRepository: Repository<Event>) {} 
+  constructor(
+    private userService: UserService,
+    @InjectRepository(Event) private eventsRepository: Repository<Event>,
+    ) {} 
 
   create(id_pojazdu: number, createEventDto: CreateEventDto) {
     const eventRecord = this.eventsRepository.create({ ...createEventDto, id_pojazdu });
@@ -20,6 +24,12 @@ export class EventsService {
 
   findOne(id_wydarzenia: number) {
     return this.eventsRepository.findOneBy({ id_wydarzenia });
+  }
+
+  async findByUserId(id_user: number) {
+    const vehilcles = await this.userService.getVehicles(id_user);
+    const ids = vehilcles.map(vehicle => vehicle.id_pojazdu);
+    return this.eventsRepository.find({ where: { id_pojazdu: In(ids) } });
   }
 
   async update(id_wydarzenia: number, updateEventDto: UpdateEventDto) {

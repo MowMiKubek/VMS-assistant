@@ -14,6 +14,7 @@ import { UserService } from 'src/user/user.service';
 import { UpdateUserRegularDto } from 'src/user/dto/update-user-regular.dto';
 import {
     ApiBearerAuth,
+    ApiCreatedResponse,
     ApiForbiddenResponse,
     ApiHeader,
     ApiOkResponse,
@@ -28,6 +29,7 @@ import { RolesGuard } from './guards/role.guard';
 import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
 import { CreatePermissionDto } from 'src/user/dto/create-permission.dto';
 import { UpdatePasswordDto } from 'src/user/dto/update-password.dto';
+import { EventsService } from 'src/events/events.service';
 
 class LoginResponse {
     @ApiProperty({
@@ -43,11 +45,12 @@ class LoginResponse {
 export class AuthController {
     constructor(
         private authService: AuthService,
-        private userService: UserService
+        private userService: UserService,
+        private eventsService: EventsService,
         ) {}
 
     @ApiOperation({ summary: 'Login user' })
-    @ApiOkResponse({ description: 'User successfully logged in, jwt token in response', type: LoginResponse })
+    @ApiCreatedResponse({ description: 'User successfully logged in, jwt token in response', type: LoginResponse })
     @ApiUnauthorizedResponse({ description: 'User credentials incorrect'})
     @Post('login')
     login(@Body() loginDto: LoginDto) {
@@ -113,8 +116,17 @@ export class AuthController {
         return this.userService.getTickets(req.user.id);
     }
 
+    @Get('events')
+    @ApiOperation({ summary: 'Events assigned to vehicles of current user' })
+    @ApiOkResponse({ description: 'Event list as response', type: [Event] })
+    @ApiBearerAuth()
+    @UseGuards(RolesGuard)
+    async events(@Request() req) {
+        return this.eventsService.findByUserId(req.user.id);
+    }
+
     @ApiOperation({ summary: 'Grant driving permission to user' })
-    @ApiOkResponse({ description: 'Driving permission granted. User object as response' })
+    @ApiCreatedResponse({ description: 'Driving permission granted. User object as response' })
     @ApiUnauthorizedResponse({ description: 'Invalid access_token '})
     @ApiBearerAuth()
     @UseGuards(RolesGuard)

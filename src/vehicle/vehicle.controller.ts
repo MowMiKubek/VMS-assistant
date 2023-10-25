@@ -109,7 +109,7 @@ export class VehicleController {
 
     @ApiOperation({ summary: 'Create mileage record for the vehicle'})
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
-    @ApiOkResponse({ description: 'mileage record created successfully, mileage object as response', type: Mileage })
+    @ApiCreatedResponse({ description: 'mileage record created successfully, mileage object as response', type: Mileage })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @ApiForbiddenResponse({ description: 'User does not have access to vehicle' })
     @Post(':id/mileage')
