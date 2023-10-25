@@ -5,7 +5,7 @@ import { Ticket } from "../..//tickets/entities/ticket.entity";
 import { Exclude } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { Permission } from "./permissions.entity";
-import { Cost } from "src/costs/entities/cost.entity";
+import { Cost } from "../../costs/entities/cost.entity";
 import { UserStatus } from "../enums/status.enum";
 
 @Entity({name: 'users'})

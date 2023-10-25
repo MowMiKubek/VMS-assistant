@@ -2,6 +2,7 @@ import {
     Injectable,
     NotFoundException,
     BadRequestException,
+    UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
@@ -11,11 +12,11 @@ import { DeleteResult, Repository } from 'typeorm';
 import { CreateMileageDto } from './dto/create-mileage.dto';
 
 import { Refuel } from '../refuel/entities/refuel.entity';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { Mileage } from './entities/mileage.entity';
 import { History } from './entities/history.entity';
-import { Event } from 'src/events/entities/event.entity';
-import { Role } from 'src/auth/role/role.enum';
+import { Event } from '../events/entities/event.entity';
+import { Role } from '../auth/role/role.enum';
 
 @Injectable()
 export class VehicleService {
@@ -86,11 +87,11 @@ export class VehicleService {
         return mileageList;
     }
 
-    async getLatestMileage(id_pojazdu: number): Promise<Mileage | {}> {
+    async getLatestMileage(id_pojazdu: number): Promise<Mileage> {
         const mileageList = await this.getMileageList(id_pojazdu);
         // handle empty list
         if(mileageList.length === 0) {
-            return {};
+            throw new NotFoundException('vehicle has no mileage');
         }
         const latestMileage = mileageList.reduce((prev, current) => {
             return prev.data > current.data ? prev : current;
@@ -99,6 +100,13 @@ export class VehicleService {
     }
 
     async addMileage(id_pojazdu: number, mileage: CreateMileageDto): Promise<Mileage> {
+        const latestEntity = await this.getLatestMileage(id_pojazdu);
+        if(latestEntity) {
+            const lastMileage = latestEntity.stan_licznika;
+            if(lastMileage > mileage.stan_licznika) {
+                throw new UnprocessableEntityException('Mileage value cannot be lower than previous one');
+            }
+        }
         const newMileage = this.mileageRepo.create({...mileage, id_pojazdu});
         return this.mileageRepo.save(newMileage);
     }
