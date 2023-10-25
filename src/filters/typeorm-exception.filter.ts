@@ -1,4 +1,5 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus } from '@nestjs/common';
+import { error } from 'console';
 import { Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 
@@ -48,6 +49,7 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
                 break;
             }
             default: {
+                console.log(message);
                 response.status(500).json({
                     statusCode: 500,
                     message: 'Unknown database error',

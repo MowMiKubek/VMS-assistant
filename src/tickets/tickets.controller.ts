@@ -10,7 +10,9 @@ import {
     UseGuards,
     ForbiddenException,
     ParseIntPipe,
-    NotFoundException
+    NotFoundException,
+    Query,
+    ParseBoolPipe
 } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
@@ -25,14 +27,15 @@ import {
     ApiOkResponse,
     ApiOperation,
     ApiParam,
+    ApiQuery,
     ApiTags,
     ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { RolesGuard } from 'src/auth/guards/role.guard';
+import { RolesGuard } from '../auth/guards/role.guard';
 import { Ticket } from './entities/ticket.entity';
 import { DeleteResult } from 'typeorm';
-import { Role } from 'src/auth/role/role.enum';
-import { Roles } from 'src/auth/role/role.decorator';
+import { Role } from '../auth/role/role.enum';
+import { Roles } from '../auth/role/role.decorator';
 
 @ApiTags('tickets')
 @ApiHeader({ name: 'Authorization', description: 'JWT access token' })
@@ -70,10 +73,11 @@ export class TicketsController {
 
     @ApiOperation({ summary: 'Get all tickets' })
     @ApiOkResponse({ description: 'List of tickets as response', type: [Ticket] })
+    @ApiQuery({ description: 'Get all tickets, including expired ones', name: 'all', required: false, type: Boolean })
     @Get()
-    findAll(@Request() req) {
+    findAll(@Request() req, @Query('all', ParseBoolPipe) all: boolean = false) {
         if(req.user.role === Role.Manager || req.user.role === Role.Admin)
-            return this.ticketsService.findAll();
+            return this.ticketsService.findAll(all);
         return this.ticketsService.findByUserId(req.user.id);
     }
 

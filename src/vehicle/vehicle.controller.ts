@@ -28,15 +28,15 @@ import {
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { RolesGuard } from 'src/auth/guards/role.guard';
-import { Role } from 'src/auth/role/role.enum';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { Role } from '../auth/role/role.enum';
 
 import { Vehicle } from './entities/vehicle.entity';
 import { Refuel } from '../refuel/entities/refuel.entity';
 import { Mileage } from './entities/mileage.entity';
 import { CreateMileageDto } from './dto/create-mileage.dto';
 import { DeleteResult } from 'typeorm';
-import { Roles } from 'src/auth/role/role.decorator';
+import { Roles } from '../auth/role/role.decorator';
 
 @ApiTags('vehicle')
 @ApiHeader({ name: 'Authorization', description: 'JWT access token'})
@@ -109,7 +109,7 @@ export class VehicleController {
 
     @ApiOperation({ summary: 'Create mileage record for the vehicle'})
     @ApiParam({ name: 'id', example: 1, description: 'id of vehicle' })
-    @ApiOkResponse({ description: 'mileage record created successfully, mileage object as response', type: Mileage })
+    @ApiCreatedResponse({ description: 'mileage record created successfully, mileage object as response', type: Mileage })
     @ApiNotFoundResponse({ description: 'vehicle with given id does not exist' })
     @ApiForbiddenResponse({ description: 'User does not have access to vehicle' })
     @Post(':id/mileage')

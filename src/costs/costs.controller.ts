@@ -4,9 +4,9 @@ import { CreateCostDto } from './dto/create-cost.dto';
 import { UpdateCostDto } from './dto/update-cost.dto';
 import { ApiCreatedResponse, ApiOperation, ApiParam, ApiOkResponse, ApiTags, ApiUnprocessableEntityResponse, ApiBadRequestResponse, ApiForbiddenResponse, ApiHeader, ApiBearerAuth } from '@nestjs/swagger';
 import { Cost } from './entities/cost.entity';
-import { Role } from 'src/auth/role/role.enum';
-import { Roles } from 'src/auth/role/role.decorator';
-import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Role } from '../auth/role/role.enum';
+import { Roles } from '../auth/role/role.decorator';
+import { RolesGuard } from '../auth/guards/role.guard';
 
 @ApiTags('costs')
 @ApiHeader({ name: 'Authorization', description: 'JWT access token' })
