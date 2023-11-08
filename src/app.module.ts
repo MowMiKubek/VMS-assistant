@@ -13,6 +13,7 @@ import { CostsModule } from './costs/costs.module';
 import databaseConfig from '../database/database.config';
 import { SerializeInterceptor } from './interceptors/serialize.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
     imports: [
@@ -27,7 +28,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
         RefuelModule, 
         EventsModule,
         TicketsModule,
-        CostsModule
+        CostsModule,
+        StatsModule
 
     ],
     controllers: [AppController],

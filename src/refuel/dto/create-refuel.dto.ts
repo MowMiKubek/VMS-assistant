@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsEnum, IsPositive, IsInt, IsOptional, IsIn } from "class-validator";
+import { IsDateString, IsNumber, IsEnum, IsPositive, IsInt, IsOptional, IsIn } from "class-validator";
 import { FuelType } from "../../vehicle/fueltype.enum";
 
 export class CreateRefuelDto {
@@ -20,6 +20,10 @@ export class CreateRefuelDto {
     @IsInt({ message: 'Niepoprawna cena'})
     @IsPositive({ message: 'Cena musi być liczbą dodatnią' })
     cena: number;
+
+    @ApiProperty({ example: "2021-05-01T12:00:00" })
+    @IsDateString({}, { message: 'Podaj datę w poprawnym formacie' })
+    data: Date;
 
     @ApiProperty({ example: 0, required: false })
     @IsOptional()

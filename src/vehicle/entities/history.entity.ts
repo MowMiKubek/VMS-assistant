@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Vehicle } from "./vehicle.entity";
+import { User } from "src/user/entities/user.entity";
 
 @Entity({ name: 'historia'})
 export class History {
@@ -16,4 +18,12 @@ export class History {
 
     @Column({type: 'int'})
     id_user: number;
+
+    @ManyToOne(() => Vehicle, vehicle => vehicle.historia)
+    @JoinColumn({ name: 'id_pojazdu' })
+    pojazd: Vehicle;
+
+    @ManyToOne(() => User, user => user.historia)
+    @JoinColumn({ name: 'id_user' })
+    user: User;
 }

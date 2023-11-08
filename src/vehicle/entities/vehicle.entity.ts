@@ -5,7 +5,7 @@ import { Refuel } from "../..//refuel/entities/refuel.entity";
 import { User } from "../..//user/entities/user.entity";
 import { Mileage } from "./mileage.entity";
 import { Event } from "../../events/entities/event.entity";
-
+import { History } from "./history.entity";
 
 @Entity({ name: 'pojazdy' })
 export class Vehicle {
@@ -62,4 +62,7 @@ export class Vehicle {
 
     @OneToMany(() => Event, wydarzenie => wydarzenie.pojazd )
     wydarzenia: Promise<Event[]>;
+
+    @OneToMany(() => History, historia => historia.pojazd)
+    historia: Promise<History[]>;
 }

@@ -28,6 +28,10 @@ export class Refuel {
     @Column({ type: 'smallint', default: 0 })
     blokada: number;
 
+    @ApiProperty({ example: '2021-05-01T12:00:00' })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    data: Date;
+
     @ApiProperty({ example: 1 })
     @Column({ type: 'int' })
     id_pojazdu: number;

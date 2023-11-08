@@ -7,6 +7,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Permission } from "./permissions.entity";
 import { Cost } from "../../costs/entities/cost.entity";
 import { UserStatus } from "../enums/status.enum";
+import { History } from "src/vehicle/entities/history.entity";
 
 @Entity({name: 'users'})
 export class User {
@@ -52,4 +53,7 @@ export class User {
 
     @OneToMany(() => Cost, cost => cost.user)
     koszty: Promise<Cost[]>;
+
+    @OneToMany(() => History, history => history.user)
+    historia: Promise<History[]>;
 }
