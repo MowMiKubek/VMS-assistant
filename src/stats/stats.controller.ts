@@ -1,8 +1,14 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { StatsService } from './stats.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/role/role.decorator';
+import { Role } from 'src/auth/role/role.enum';
 
 @ApiTags('stats')
+@UseGuards(RolesGuard)
+@Roles(Role.Admin)
+@ApiBearerAuth()
 @Controller('stats')
 export class StatsController {
     constructor(private statsService: StatsService) {}

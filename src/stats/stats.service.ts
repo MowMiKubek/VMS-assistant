@@ -95,7 +95,7 @@ export class StatsService {
             .select(["historia.poczatek", "historia.koniec"])
             .leftJoin("historia.pojazd", "pojazd")
             .leftJoin("historia.user", "user")
-            .addSelect(["pojazd.marka", "pojazd.model"])
+            .addSelect(["pojazd.marka", "pojazd.model", "pojazd.nr_rejestracyjny"])
             .addSelect(["user.imie", "user.nazwisko"])
             .getMany();
 
