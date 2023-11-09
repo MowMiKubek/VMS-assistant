@@ -15,7 +15,7 @@ import { Refuel } from '../refuel/entities/refuel.entity';
 import { User } from '../user/entities/user.entity';
 import { Mileage } from './entities/mileage.entity';
 import { History } from './entities/history.entity';
-import { Event } from '../events/entities/event.entity';
+import { CarEvent } from '../events/entities/event.entity';
 import { Role } from '../auth/role/role.enum';
 
 @Injectable()
@@ -69,7 +69,7 @@ export class VehicleService {
         return refuelList;
     }
 
-    async getEvents(id: number): Promise<Event[]> {
+    async getEvents(id: number): Promise<CarEvent[]> {
         const currentVehicle = await this.findOne(id);
         if (!currentVehicle) {
             throw new NotFoundException('vehicle not found');

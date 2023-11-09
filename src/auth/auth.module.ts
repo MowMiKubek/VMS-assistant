@@ -5,11 +5,13 @@ import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EventsModule } from 'src/events/events.module';
+import { RefuelModule } from 'src/refuel/refuel.module';
 
 @Module({
     imports: [
         UserModule,
         EventsModule,
+        RefuelModule,
         JwtModule.registerAsync({
             inject: [ConfigService],
             useFactory: async (config: ConfigService) => ({

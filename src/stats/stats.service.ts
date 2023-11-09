@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Event } from 'src/events/entities/event.entity';
+import { CarEvent } from 'src/events/entities/event.entity';
 import { History } from 'src/vehicle/entities/history.entity';
 import { Refuel } from 'src/refuel/entities/refuel.entity';
 
 @Injectable()
 export class StatsService {
     constructor(
-        @InjectRepository(Event) private eventRepository: Repository<Event>,
+        @InjectRepository(CarEvent) private eventRepository: Repository<CarEvent>,
         @InjectRepository(History) private historyRepository: Repository<History>,
         @InjectRepository(Refuel) private refuelRepository: Repository<Refuel>,
         ) {}
