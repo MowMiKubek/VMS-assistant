@@ -3,7 +3,7 @@ import { Vehicle } from "../../vehicle/entities/vehicle.entity";
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 
 @Entity({ name: 'wydarzenia' })
-export class Event {
+export class CarEvent {
     @PrimaryGeneratedColumn()
     id_wydarzenia: number;
 

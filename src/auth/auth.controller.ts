@@ -30,6 +30,9 @@ import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
 import { CreatePermissionDto } from 'src/user/dto/create-permission.dto';
 import { UpdatePasswordDto } from 'src/user/dto/update-password.dto';
 import { EventsService } from 'src/events/events.service';
+import { RefuelService } from 'src/refuel/refuel.service';
+import { Refuel } from 'src/refuel/entities/refuel.entity';
+import { CarEvent } from 'src/events/entities/event.entity';
 
 class LoginResponse {
     @ApiProperty({
@@ -47,6 +50,7 @@ export class AuthController {
         private authService: AuthService,
         private userService: UserService,
         private eventsService: EventsService,
+        private refuelService: RefuelService,
         ) {}
 
     @ApiOperation({ summary: 'Login user' })
@@ -118,11 +122,23 @@ export class AuthController {
 
     @Get('events')
     @ApiOperation({ summary: 'Events assigned to vehicles of current user' })
-    @ApiOkResponse({ description: 'Event list as response', type: [Event] })
+    @ApiOkResponse({ description: 'Event list as response', type: [CarEvent] })
     @ApiBearerAuth()
     @UseGuards(RolesGuard)
     async events(@Request() req) {
         return this.eventsService.findByUserId(req.user.id);
+    }
+    
+    @Get('refuel')
+    @ApiOperation({ summary: 'Refuel of vehicles assigned to current user' })
+    @ApiOkResponse({ description: 'Refuel list as response', type: [Refuel] })
+    @ApiBearerAuth()
+    @UseGuards(RolesGuard)
+    async refuel(@Request() req) {
+        const vehicles = await this.userService.getVehicles(req.user.id);
+        // for all elements of vehicles resolve `tankowania` relation
+        const refuels = await Promise.all(vehicles.map(vehicle => this.refuelService.findByVehicleId(vehicle.id_pojazdu)));
+        return refuels.flat();
     }
 
     @ApiOperation({ summary: 'Grant driving permission to user' })
