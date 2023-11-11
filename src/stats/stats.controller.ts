@@ -4,49 +4,66 @@ import { ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiTags, ApiUnautho
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/role/role.decorator';
 import { Role } from 'src/auth/role/role.enum';
+import { CustomDate, QueryDateRange } from './decorators/date.decodator';
 
 @ApiTags('stats')
-@UseGuards(RolesGuard)
-@Roles(Role.Admin)
 @ApiBearerAuth()
+@UseGuards(RolesGuard)
+@Roles(Role.Manager)
 @Controller('stats')
 export class StatsController {
     constructor(private statsService: StatsService) {}
 
     @Get("/events")
-    @ApiOkResponse({ description: 'Get all events stats. Admin role required' , type: Array})
+    @ApiOkResponse({ description: 'Get all events stats. Manager role required', type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
-    getEventsStats(): Promise<any> {
-        return this.statsService.getEventsStats();
+    getEventsStats(@CustomDate() date: QueryDateRange): Promise<any> {
+        return this.statsService.getEventsStats(date.startDate, date.endDate);
     }
 
     @Get("/events/:id")
-    @ApiOkResponse({ description: 'Get all events stats, for given id of vehicle. Admin role required' , type: Array})
+    @ApiOkResponse({ description: 'Get all events stats, for given id of vehicle. Manager role required' , type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
-    getEventsStatsForVehicle(@Param("id", ParseIntPipe) id: number): Promise<any> {
-        return this.statsService.getEventsStats(id);
+    getEventsStatsForVehicle(@Param("id", ParseIntPipe) id: number, @CustomDate() date: QueryDateRange): Promise<any> {
+        return this.statsService.getEventsStats(date.startDate, date.endDate, id);
     }
 
     @Get("/refuel")
-    @ApiOkResponse({ description: 'Get all refuel stats. Admin role required' , type: Array})
+    @ApiOkResponse({ description: 'Get all refuel stats. Manager role required' , type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
-    getRefuelStats(): Promise<any> {
-        return this.statsService.getRefuelStats();
+    getRefuelStats(@CustomDate() date: QueryDateRange): Promise<any> {
+        return this.statsService.getRefuelStats(date.startDate, date.endDate);
     }
 
     @Get("/refuel/:id")
-    @ApiOkResponse({ description: 'Get all refuel stats, for given id of vehicle. Admin role required' , type: Array})
+    @ApiOkResponse({ description: 'Get all refuel stats, for given id of vehicle. Manager role required' , type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
-    getRefuelStatsForVehicle(@Param("id", ParseIntPipe) id: number): Promise<any> {
-        return this.statsService.getRefuelStats(id);
+    getRefuelStatsForVehicle(@Param("id", ParseIntPipe) id: number, @CustomDate() date: QueryDateRange): Promise<any> {
+        return this.statsService.getRefuelStats(date.startDate, date.endDate, id);
+    }
+
+    @Get("/tickets/")
+    @ApiOkResponse({ description: 'Get all tickets stats. Manager role required', type: Array})
+    @ApiUnauthorizedResponse({ description: 'Token not provided' })
+    @ApiForbiddenResponse({ description: 'Insufficient role '})
+    getTicketsStats(@CustomDate() date: QueryDateRange): Promise<any> {
+        return this.statsService.getTicketsStats(date.startDate, date.endDate);
+    }
+
+    @Get("/tickets/:id")
+    @ApiOkResponse({ description: 'Get all tickets stats. Manager role required', type: Array})
+    @ApiUnauthorizedResponse({ description: 'Token not provided' })
+    @ApiForbiddenResponse({ description: 'Insufficient role '})
+    getTicketsStatsForUser(@Param("id", ParseIntPipe) id: number, @CustomDate() date: QueryDateRange): Promise<any> {
+        return this.statsService.getTicketsStats(date.startDate, date.endDate, id);
     }
 
     @Get("/history")
-    @ApiOkResponse({ description: 'Get history of ownership for vehicles. Admin role required' , type: Array})
+    @ApiOkResponse({ description: 'Get history of ownership for vehicles. Manager role required', type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
     getVehicleAssignments(): Promise<any> {
