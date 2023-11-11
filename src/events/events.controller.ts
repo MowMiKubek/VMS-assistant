@@ -15,7 +15,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { RolesGuard } from '../auth/guards/role.guard';
-import { Event } from './entities/event.entity';
+import { CarEvent } from './entities/event.entity';
 import { DeleteResult } from 'typeorm';
 import { Roles } from '../auth/role/role.decorator';
 import { Role } from '../auth/role/role.enum';
@@ -30,7 +30,7 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @ApiOperation({ summary: 'Create event. Manager role required' })
-  @ApiCreatedResponse({ description: 'Event record was created', type: Event})
+  @ApiCreatedResponse({ description: 'Event record was created', type: CarEvent})
   @ApiUnprocessableEntityResponse({ description: 'Car with given id does not exist' })
   @ApiBadRequestResponse({ description: 'Incorrect fields in request body' })
   @ApiParam({ name: 'vehicleid', example: 1, description: 'id of vehicle that will have event' })
@@ -40,21 +40,21 @@ export class EventsController {
   }
 
   @ApiOperation({ summary: 'Get all event records. Manager role required' })
-  @ApiOkResponse({ description: 'List of event records as response', type: [Event] })
+  @ApiOkResponse({ description: 'List of event records as response', type: [CarEvent] })
   @Get()
   findAll() {
     return this.eventsService.findAll();
   }
 
   @ApiOperation({ summary: 'Get event record by id. Manager role required' })
-  @ApiOkResponse({ description: 'Event record as response', type: Event })
+  @ApiOkResponse({ description: 'Event record as response', type: CarEvent })
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: string) {
     return this.eventsService.findOne(+id);
   }
 
   @ApiOperation({ summary: 'Update event record by id. Manager role required' })
-  @ApiOkResponse({ description: 'Event record as response', type: Event })
+  @ApiOkResponse({ description: 'Event record as response', type: CarEvent })
   @ApiNotFoundResponse({ description: 'Event record with given id does not exist' })
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: string, @Body() updateEventDto: UpdateEventDto) {

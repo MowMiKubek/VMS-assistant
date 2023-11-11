@@ -10,5 +10,6 @@ import { Refuel } from './entities/refuel.entity';
   imports: [TypeOrmModule.forFeature([Vehicle, Refuel]), VehicleModule],
   controllers: [RefuelController],
   providers: [RefuelService], 
+  exports: [RefuelService]
 })
 export class RefuelModule {}
