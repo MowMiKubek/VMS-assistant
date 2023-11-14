@@ -1,3 +1,4 @@
+import { Role } from "../../auth/role/role.enum";
 import { Vehicle } from "../../vehicle/entities/vehicle.entity";
 import { FuelType } from "../../vehicle/fueltype.enum";
 
@@ -34,4 +35,8 @@ export const VehicleServiceMock = {
     create: jest.fn().mockImplementation((createVehicleDto) => ({ id_pojazdu: 1, ...createVehicleDto })),
     update: jest.fn().mockImplementation((id_pojazdu: number, updateVehicleDto) => ({ ...sampleVehicle1, ...updateVehicleDto, id_pojazdu })),
     remove: jest.fn().mockImplementation((id_pojazdu: number) => ({ affected: id_pojazdu < 3 ? 1 : 0 })),
+    checkIfUserCanAccessVehicle: jest.fn().mockImplementation((id_pojazdu: number, user: any) => {
+        if(user.role === Role.Admin || user.role === Role.Manager) return true;
+        return id_pojazdu === 1 && user.id === 1
+    }),
   };

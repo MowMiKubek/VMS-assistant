@@ -45,7 +45,6 @@ export class UserService {
             hash = await bcrypt.hash(updateUserDto.haslo, salt);
         }
         Object.assign(currentUser, {...updateUserDto, haslo: hash});
-        console.log(currentUser);
         return this.userRepo.save(currentUser);
     }
 
