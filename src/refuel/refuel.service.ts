@@ -37,7 +37,7 @@ export class RefuelService {
     return this.refuelRepo.save(currentRefuel);
   }
 
-  remove(id_pojazdu: number): Promise<DeleteResult> {
-    return this.refuelRepo.delete({ id_pojazdu });
+  remove(id_tankowania: number): Promise<DeleteResult> {
+    return this.refuelRepo.delete({ id_tankowania });
   }
 }

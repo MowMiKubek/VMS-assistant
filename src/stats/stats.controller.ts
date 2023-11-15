@@ -1,6 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { StatsService } from './stats.service';
-import { ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/role/role.decorator';
 import { Role } from 'src/auth/role/role.enum';
@@ -15,6 +15,8 @@ export class StatsController {
     constructor(private statsService: StatsService) {}
 
     @Get("/events")
+    @ApiQuery({ name: 'start', required: false, type: String })
+    @ApiQuery({ name: 'end', required: false, type: String })
     @ApiOkResponse({ description: 'Get all events stats. Manager role required', type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
@@ -23,6 +25,8 @@ export class StatsController {
     }
 
     @Get("/events/:id")
+    @ApiQuery({ name: 'start', required: false, type: String })
+    @ApiQuery({ name: 'end', required: false, type: String })
     @ApiOkResponse({ description: 'Get all events stats, for given id of vehicle. Manager role required' , type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
@@ -31,6 +35,8 @@ export class StatsController {
     }
 
     @Get("/refuel")
+    @ApiQuery({ name: 'start', required: false, type: String })
+    @ApiQuery({ name: 'end', required: false, type: String })
     @ApiOkResponse({ description: 'Get all refuel stats. Manager role required' , type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
@@ -39,6 +45,8 @@ export class StatsController {
     }
 
     @Get("/refuel/:id")
+    @ApiQuery({ name: 'start', required: false, type: String })
+    @ApiQuery({ name: 'end', required: false, type: String })
     @ApiOkResponse({ description: 'Get all refuel stats, for given id of vehicle. Manager role required' , type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
@@ -47,6 +55,8 @@ export class StatsController {
     }
 
     @Get("/tickets/")
+    @ApiQuery({ name: 'start', required: false, type: String })
+    @ApiQuery({ name: 'end', required: false, type: String })
     @ApiOkResponse({ description: 'Get all tickets stats. Manager role required', type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
@@ -55,6 +65,8 @@ export class StatsController {
     }
 
     @Get("/tickets/:id")
+    @ApiQuery({ name: 'start', required: false, type: String })
+    @ApiQuery({ name: 'end', required: false, type: String })
     @ApiOkResponse({ description: 'Get all tickets stats. Manager role required', type: Array})
     @ApiUnauthorizedResponse({ description: 'Token not provided' })
     @ApiForbiddenResponse({ description: 'Insufficient role '})
