@@ -7,7 +7,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Permission } from "./permissions.entity";
 import { Cost } from "../../costs/entities/cost.entity";
 import { UserStatus } from "../enums/status.enum";
-import { History } from "src/vehicle/entities/history.entity";
+import { History } from "../../vehicle/entities/history.entity";
 
 @Entity({name: 'users'})
 export class User {

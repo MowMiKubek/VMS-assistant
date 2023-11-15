@@ -3,30 +3,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RefuelService } from './refuel.service';
 import { Refuel } from './entities/refuel.entity';
+import { RefuelRepositoryMock } from '../testComponents/repository/RefuelRepository.mock';
 import { FuelType } from '../vehicle/fueltype.enum';
-import { UpdateRefuelDto } from './dto/update-refuel.dto';
-
-let testRefuel = new Refuel();
-let testRefuel2 = new Refuel();
-Object.assign(testRefuel, {
-  id_tankowania: 1,
-  ilosc_paliwa: 50.02,
-  typ_paliwa: FuelType.Benzyna,
-  cena_za_litr: 649,
-  cena: 32463,
-  blokada: 0,
-  id_pojazdu: 1
-});
-Object.assign(testRefuel2, {
-  id_tankowania: 2,
-  ilosc_paliwa: 40,
-  typ_paliwa: FuelType.Diesel,
-  cena_za_litr: 500,
-  cena: 20000,
-  blokada: 0,
-  id_pojazdu: 1
-});
-const refuelArray = [testRefuel, testRefuel2];
 
 describe('RefuelService', () => {
   let service: RefuelService;
@@ -38,19 +16,7 @@ describe('RefuelService', () => {
         RefuelService,
         {
           provide: getRepositoryToken(Refuel),
-          useValue: {
-            find: jest.fn().mockResolvedValue(refuelArray),
-            findBy: jest.fn().mockResolvedValue(refuelArray),
-            findOneBy: jest.fn().mockResolvedValue(testRefuel),
-            create: jest.fn().mockReturnValue(testRefuel),
-            save: jest.fn().mockResolvedValue(testRefuel),
-            // as these do not actually use their return values in our sample
-            // we just make sure that their resolve is true to not crash
-            update: jest.fn((data: UpdateRefuelDto) => ({testRefuel, ...data})),
-            // as these do not actually use their return values in our sample
-            // we just make sure that their resolve is true to not crash
-            delete: jest.fn(id => ({affected: 1, raw: '', generatedMaps: ''})),
-          }
+          useValue: RefuelRepositoryMock
         }
       ],
     }).compile();
@@ -64,34 +30,66 @@ describe('RefuelService', () => {
   });
 
   it('should return an array of refuel records', async () => {
+    const spyRepo = jest.spyOn(repo, 'find');
     const result = await service.findAll();
-    expect(result).toEqual(refuelArray);
+    expect(result).toBeInstanceOf(Array);
+    expect(result).toHaveLength(2);
+    expect(spyRepo).toBeCalled();
   });
 
   it('should return an array of refuel records for a given vehicle', async () => {
-    const result = await service.findByVehicleId(1);
-    expect(result).toEqual(refuelArray);
+    const spyRepo = jest.spyOn(repo, 'findBy');
+    const result = await service.findByVehicleId(3);
+    expect(result).toBeInstanceOf(Array);
+    expect(result).toHaveLength(2);
+    result.forEach(refuel => expect(refuel.id_pojazdu).toEqual(3));
+    expect(spyRepo).toBeCalledWith({ id_pojazdu: 3 });
   });
 
   it('should return a single refuel record for a given id', async () => {
+    const spyRepo = jest.spyOn(repo, 'findOneBy');
     const result = await service.findOne(1);
-    expect(result).toEqual(testRefuel);
+    expect(result).toBeDefined();
+    expect(result).toHaveProperty('id_tankowania', 1);
+    expect(spyRepo).toBeCalledWith({ id_tankowania: 1 });
   });
 
   it('should create a new refuel record', async () => {
-    const result = await service.create(1, testRefuel);
-    expect(result).toEqual(testRefuel);
+    const exampleRefuel = {
+      id_tankowania: 1,
+      ilosc_paliwa: 50.02,
+      typ_paliwa: FuelType.Benzyna,
+      cena_za_litr: 649,
+      cena: 32463,
+      blokada: 0,
+      id_pojazdu: 1
+    } as Refuel;
+    const spyRepo = jest.spyOn(repo, 'create');
+    const result = await service.create(1, exampleRefuel);
+    expect(result).toBeDefined();
+    expect(result).toHaveProperty('id_tankowania', 1);
+    expect(result).toHaveProperty('ilosc_paliwa', 50.02);
+    expect(result).toHaveProperty('typ_paliwa', FuelType.Benzyna);
+    expect(result).toHaveProperty('cena_za_litr', 649);
+    expect(result).toHaveProperty('cena', 32463);
+    expect(result).toHaveProperty('blokada', 0);
+    expect(result).toHaveProperty('id_pojazdu', 1);
+    expect(spyRepo).toBeCalledWith(exampleRefuel);
   });
 
   it('should update an existing refuel record', async () => {
+    const spyRepo = jest.spyOn(repo, 'save');
     const result = await service.update(1, {ilosc_paliwa: 60});
     expect(result).toBeDefined();
     expect(result).toHaveProperty('ilosc_paliwa', 60);
+    expect(spyRepo).toBeCalledWith({...result, ilosc_paliwa: 60});
   });
 
   it('should delete an existing refuel record', async () => {
+    const spyRepo = jest.spyOn(repo, 'delete');
     const result = await service.remove(5);
     expect(result).toBeDefined();
     expect(result).toHaveProperty('affected', 1);
+    expect(spyRepo).toBeCalledWith({ id_tankowania: 5 });
 });
 });
