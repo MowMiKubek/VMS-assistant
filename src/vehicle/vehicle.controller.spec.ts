@@ -124,4 +124,65 @@ describe('VehicleController', () => {
       kategoria: 'B',
     });
   });
+
+  it('should return mileageList for vehicle with id_pojazdu=1', async () => {
+    const serviceSpy = jest.spyOn(VehicleServiceMock, 'getMileageList');
+    const mileageList = await controller.getMileage('1');
+    expect(mileageList).toBeDefined;
+    expect(mileageList).toBeInstanceOf(Array);
+    expect(mileageList.length).toEqual(2);
+    expect(serviceSpy).toBeCalledWith(1);
+  });
+
+  it('should return latest mileage if user can access the vehicle ', async () => {
+    const serviceSpy = jest.spyOn(VehicleServiceMock, 'getMileageList');
+    const mileage = await controller.getLatestMileage({ user: { id: 1, role: 'user' }}, '1');
+    expect(mileage).toBeDefined;
+    expect(mileage.stan_licznika).toEqual(100500);
+    expect(serviceSpy).toBeCalledWith(1);
+  });
+
+  it('getLatestMileage should throw ForbiddenException when accessing mileage for unavalible vehicle', async () => {
+    expect(async () => 
+      await controller.getLatestMileage({ user: { id: 1, role: 'user' }}, '2')
+    ).rejects.toThrow('Forbidden resource');
+  });
+
+  it('should return refuelList for vehicle with id_pojazdu=1', async () => {
+    const serviceSpy = jest.spyOn(VehicleServiceMock, 'findOne');
+    const refuelList = await controller.getRefuel({ user: { id: 1, role: 'admin' }}, '1');
+    expect(refuelList).toBeDefined;
+    expect(refuelList).toBeInstanceOf(Array);
+    expect(serviceSpy).toBeCalledWith(1);
+  });
+
+  it('should return refuelList for vehicle with id_pojazdu=1', async () => {
+    const serviceSpy = jest.spyOn(VehicleServiceMock, 'findOne');
+    const refuelList = await controller.getRefuel({ user: { id: 1, role: 'admin' }}, '1');
+    expect(refuelList).toBeDefined;
+    expect(refuelList).toBeInstanceOf(Array);
+    expect(serviceSpy).toBeCalledWith(1);
+  });
+
+  it('should return refuelList for vehicle with id_pojazdu=1 if can acccess the vehicle', async () => {
+    const serviceSpy = jest.spyOn(VehicleServiceMock, 'findOne');
+    const refuelList = await controller.getRefuel({ user: { id: 1, role: 'user' }}, '1');
+    expect(refuelList).toBeDefined;
+    expect(refuelList).toBeInstanceOf(Array);
+    expect(serviceSpy).toBeCalledWith(1);
+  });
+
+  it('for getRefuel should throw ForbiddenException if cannot acccess the vehicle', async () => {
+    expect(async () => 
+      await controller.getRefuel({ user: { id: 1, role: 'user' }}, '2')
+    ).rejects.toThrow('Forbidden resource');
+  });
+
+  it('should return eventList for vehicle with id_pojazdu=1', async () => {
+    const serviceSpy = jest.spyOn(VehicleServiceMock, 'findOne');
+    const refuelList = await controller.getRefuel({ user: { id: 1, role: 'admin' }}, '1');
+    expect(refuelList).toBeDefined;
+    expect(refuelList).toBeInstanceOf(Array);
+    expect(serviceSpy).toBeCalledWith(1);
+  });
 });
