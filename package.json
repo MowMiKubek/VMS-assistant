@@ -28,6 +28,8 @@
     "migration:revert:production": "cross-env NODE_ENV=production npm run typeorm -- migration:revert -d ./database/ormconfig.ts"
   },
   "dependencies": {
+    "@json2csv/plainjs": "^7.0.3",
+    "@json2csv/transforms": "^7.0.3",
     "@nestjs/cli": "^10.1.12",
     "@nestjs/common": "^10.2.0",
     "@nestjs/config": "^3.0.0",
@@ -47,8 +49,8 @@
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.17",
-    "tsconfig-paths": "^4.2.0"
+    "tsconfig-paths": "^4.2.0",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@nestjs/schematics": "^10.0.2",
