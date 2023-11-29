@@ -115,11 +115,64 @@ describe('VehicleService', () => {
         expect(repoSpy).toBeCalledWith({ id_pojazdu: 1 });
     });
 
-    it('delete should return affected: 0 if vehicle exists', async () => {
+    it('delete should return affected: 0 if vehicle doesnt exists', async () => {
         const repoSpy = jest.spyOn(repository, 'delete');
         const affected = await service.remove(3);
         expect(affected).toBeDefined;
         expect(affected.affected).toEqual(0);
+        expect(repoSpy).toBeCalledWith({ id_pojazdu: 3 });
+    });
+
+    it('getMileageList should return array of Mileage for existing vehicle', async () => {
+        const repoSpy = jest.spyOn(repository, 'findOneBy');
+        const mileageList = await service.getMileageList(1);
+        expect(mileageList).toBeDefined;
+        expect(mileageList.length).toEqual(2);
+        expect(repoSpy).toBeCalledWith({ id_pojazdu: 1 });
+    });
+
+    it('getMileageList should throw NotFoundException for non-existing vehicle', async () => {
+        const repoSpy = jest.spyOn(repository, 'findOneBy');
+        repoSpy.mockResolvedValueOnce(undefined);
+        await expect(service.getMileageList(3)).rejects.toThrowError('vehicle not found');
+        expect(repoSpy).toBeCalledWith({ id_pojazdu: 3 });
+    });
+
+    it('getLatestMileage should return Mileage with latest date for existing vehicle', async () => {
+        const repoSpy = jest.spyOn(repository, 'findOneBy');
+        const mileage = await service.getLatestMileage(1);
+        expect(mileage).toBeDefined;
+        expect(mileage.id_przebiegu).toEqual(2);
+        expect(repoSpy).toBeCalledWith({ id_pojazdu: 1 });
+    });
+
+    it('getRefuel should return array of Refuel for existing vehicle', async () => {
+        const repoSpy = jest.spyOn(repository, 'findOneBy');
+        const refuelList = await service.getRefuel(1);
+        expect(refuelList).toBeDefined;
+        expect(refuelList.length).toEqual(2);
+        expect(repoSpy).toBeCalledWith({ id_pojazdu: 1 });
+    });
+
+    it('getRefuel should throw NotFoundException for non-existing vehicle', async () => {
+        const repoSpy = jest.spyOn(repository, 'findOneBy');
+        repoSpy.mockResolvedValueOnce(undefined);
+        await expect(service.getRefuel(3)).rejects.toThrowError('vehicle not found');
+        expect(repoSpy).toBeCalledWith({ id_pojazdu: 3 });
+    });
+
+    it('getEvents should return array of CarEvent for existing vehicle', async () => {
+        const repoSpy = jest.spyOn(repository, 'findOneBy');
+        const eventList = await service.getEvents(1);
+        expect(eventList).toBeDefined;
+        expect(eventList.length).toEqual(2);
+        expect(repoSpy).toBeCalledWith({ id_pojazdu: 1 });
+    });
+
+    it('getEvents should throw NotFoundException for non-existing vehicle', async () => {
+        const repoSpy = jest.spyOn(repository, 'findOneBy');
+        repoSpy.mockResolvedValueOnce(undefined);
+        await expect(service.getEvents(3)).rejects.toThrowError('vehicle not found');
         expect(repoSpy).toBeCalledWith({ id_pojazdu: 3 });
     });
 });
