@@ -5,6 +5,7 @@ import { CarEvent } from 'src/events/entities/event.entity';
 import { History } from 'src/vehicle/entities/history.entity';
 import { Refuel } from 'src/refuel/entities/refuel.entity';
 import { Ticket } from 'src/tickets/entities/ticket.entity';
+import { Cost } from 'src/costs/entities/cost.entity';
 
 @Injectable()
 export class StatsService {
@@ -13,6 +14,7 @@ export class StatsService {
         @InjectRepository(History) private historyRepository: Repository<History>,
         @InjectRepository(Refuel) private refuelRepository: Repository<Refuel>,
         @InjectRepository(Ticket) private ticketRepository: Repository<Ticket>,
+        @InjectRepository(Cost) private costsRepository: Repository<Cost>,
         ) {}
 
     async getEventsStats(startDate: string, endDate: string, id_pojazdu?: number): Promise<any> {
@@ -128,6 +130,44 @@ export class StatsService {
 
         this.chainDateBounds(queryMonthly, startDate, endDate, "data_wystawienia");
         this.chainDateBounds(queryYearly, startDate, endDate, "data_wystawienia");
+        
+        if(id_user) {
+            queryMonthly.where("id_user = :id_user", { id_user });
+            queryYearly.where("id_user = :id_user", { id_user });
+        }
+
+        queryMonthly.groupBy("rok")
+            .addGroupBy("miesiac")
+            .orderBy("rok")
+            .addOrderBy("miesiac");
+           
+        queryYearly.groupBy("rok")
+            .orderBy("rok");
+        
+        const [resultMonthly, resultYearly] = await Promise.all([queryMonthly.execute(), queryYearly.execute()]);
+
+        return {
+            monthly: resultMonthly,
+            yearly: resultYearly,
+        };
+    }
+
+    async getCostsStats(startDate: string, endDate: string, id_user?: number): Promise<any> {
+        const queryMonthly = this.costsRepository.createQueryBuilder()
+            .select([
+                "EXTRACT(YEAR FROM data) as rok",
+                "EXTRACT(MONTH FROM data) as miesiac",
+                "SUM(koszt) as suma_kosztow",
+            ]);
+        
+        const queryYearly = this.costsRepository.createQueryBuilder()
+            .select([
+                "EXTRACT(YEAR FROM data) as rok",
+                "SUM(koszt) as suma_kosztow",
+            ]);
+
+        this.chainDateBounds(queryMonthly, startDate, endDate, "data");
+        this.chainDateBounds(queryYearly, startDate, endDate, "data");
         
         if(id_user) {
             queryMonthly.where("id_user = :id_user", { id_user });
