@@ -8,9 +8,11 @@ import { History } from 'src/vehicle/entities/history.entity';
 import { Ticket } from 'src/tickets/entities/ticket.entity';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { StatsInterceptor } from 'src/interceptors/stats.interceptor';
+import { VehicleModule } from 'src/vehicle/vehicle.module';
+import { Cost } from 'src/costs/entities/cost.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CarEvent, Refuel, History, Ticket])],
+  imports: [TypeOrmModule.forFeature([CarEvent, Refuel, History, Ticket, Cost]), VehicleModule],
   controllers: [StatsController],
   providers: [StatsService, { provide: APP_INTERCEPTOR, useClass: StatsInterceptor }]
 })
